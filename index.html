@@ -9,6 +9,670 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<style id="leaflet-css">
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+
+</style>
 <style>
 :root{
   /* layout: one phone-width column; big yardage tiles on top; bottom tab bar (วัดระยะ / เก็บพิกัด / ข้อมูล) */
@@ -119,6 +783,21 @@ details summary{cursor:pointer;font-weight:500;min-height:32px}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
 a{color:var(--accent)}
 .foot{font-size:12px;color:var(--muted);margin-top:4px}
+.linkbtn{background:none;border:0;color:var(--accent);text-decoration:underline;font:inherit;padding:0;cursor:pointer}
+.seg{font:inherit;font-size:14px;font-weight:500;min-height:40px;padding:4px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.seg[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+nav{z-index:1000}
+#toast{z-index:1100}
+.mapbox{height:340px;border-radius:12px;overflow:hidden;isolation:isolate;background:var(--tint)}
+.cross{position:absolute;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;z-index:500;pointer-events:none}
+.cross svg{width:100%;height:100%;stroke:#fff;stroke-width:2;fill:none;filter:drop-shadow(0 0 2px #000)}
+.leaflet-tooltip.lbl{background:rgba(0,0,0,.7);border:0;color:#fff;font-family:var(--font-body);font-weight:700;font-size:12px;padding:1px 6px;box-shadow:none}
+.leaflet-tooltip-right.lbl::before{border-right-color:rgba(0,0,0,.7)}
+.leaflet-tooltip.dist{background:#fff;border:0;color:#12271d;font-family:var(--font-num);font-weight:700;font-size:17px;line-height:1.1;padding:0 6px;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.leaflet-tooltip.dist::before{display:none}
+.teeicon span,.markicon span{display:grid;place-items:center;width:22px;height:22px;font-weight:700;font-size:12px;border:2px solid #fff;color:#12271d;box-shadow:0 1px 3px rgba(0,0,0,.6)}
+.teeicon span{background:#ffd23f;border-radius:4px}
+.markicon span{background:#fff;border-radius:50%}
 </style>
 </head>
 <body>
@@ -198,7 +877,8 @@ function eff(arr){
 
 /* ---------- สถานะแอป ---------- */
 function newRound(){return {id:Date.now(),date:new Date().toISOString().slice(0,10),marks:{}};}
-function blankState(){return {v:1,course:'RSU Vista Golf Course',demo:false,teeSet:'white',hole:1,pts:{},round:newRound(),rounds:[],sim:null};}
+function blankState(){return {v:1,course:'RSU Vista Golf Course',demo:false,teeSet:'white',hole:1,pts:{},round:newRound(),rounds:[],sim:null,map:null};}
+function resetKeep(){var t=S.teeSet,m=S.map;S=blankState();S.teeSet=t;S.map=m;}
 function demoState(){
   var s=blankState();s.demo=true;
   var base={lat:13.0,lng:100.0},lens=[356,143,445];
@@ -220,7 +900,7 @@ function load(){
 }
 var S=load()||demoState();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storageOk=true;}catch(e){storageOk=false;}}
-function ensureReal(){ if(S.demo){var t=S.teeSet;S=blankState();S.teeSet=t;} }
+function ensureReal(){ if(S.demo) resetKeep(); }
 function P(h,k){var o=S.pts[h]||(S.pts[h]={F:[],B:[],T:[]});return o[k]||(o[k]=[]);}
 function holeGeo(h){
   var o=S.pts[h]||{};var F=eff(o.F),B=eff(o.B),T=eff(o.T);
@@ -329,7 +1009,7 @@ function holeBar(){
 function viewPlay(){
   return demoBanner()+holeBar()+
   '<div class="card"><div class="row spread"><div id="gpsinfo" aria-live="polite"></div><button id="gpsbtn" class="btn" data-act="gpsToggle"></button></div></div>'+
-  '<div id="suggest"></div><div id="tiles" class="tiles"></div><div id="plan"></div>'+
+  '<div id="suggest"></div><div id="tiles" class="tiles"></div>'+mapCardHTML()+'<div id="plan"></div>'+
   '<div class="card"><h2>ช็อตของหลุมนี้</h2><div id="shots">'+shotsHTML()+'</div></div>';
 }
 function tilesHTML(){
@@ -359,6 +1039,7 @@ function suggestHTML(){
   return '<div class="card hint row spread"><span>ตำแหน่งนี้ใกล้หลุม '+best.h+' ('+fmt(best.d)+' หลา)</span><button class="btn small primary" data-act="hole" data-h="'+best.h+'">ไปหลุม '+best.h+'</button></div>';
 }
 function planHTML(){
+  if(mapAvailable()) return '';
   var n=S.hole,g=holeGeo(n);if(!g.F&&!g.B) return '';
   var pos=getPos(),marks=S.round.marks[n]||[];
   var ref=g.mid||g.F||g.B;
@@ -401,7 +1082,8 @@ function planHTML(){
     else if(o.k==='P') s+='<circle class="me" cx="'+x+'" cy="'+y+'" r="7"/>';
   });
   s+='</svg>';
-  return '<div class="card plan">'+s+'<div class="muted cap">แผนผังโดยประมาณ หัวขึ้นคือทิศไปกรีน'+((pos&&!near)?' · คุณอยู่ไกลจากหลุมนี้':'')+'</div></div>';
+  var hint=inFrame?'':'<div class="muted cap">อยากเห็นภาพสนามจริง <button class="linkbtn" data-act="tab" data-tab="data">ใส่คีย์แผนที่ดาวเทียมฟรี</button></div>';
+  return '<div class="card plan">'+s+'<div class="muted cap">แผนผังโดยประมาณ หัวขึ้นคือทิศไปกรีน'+((pos&&!near)?' · คุณอยู่ไกลจากหลุมนี้':'')+'</div>'+hint+'</div>';
 }
 function shotsHTML(){
   var n=S.hole,marks=S.round.marks[n]||[],g=holeGeo(n);
@@ -462,9 +1144,9 @@ function overviewCard(){
   return '<div class="card"><h2>ภาพรวม 18 หลุม</h2><div class="scroll"><table><thead><tr><th>หลุม</th><th>พาร์</th><th>หน้า</th><th>หลัง</th><th>ที</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="foot">ตัวเลขคือจำนวนค่าที่เก็บ ⚠ คือค่าห่างกันเกิน '+TOL+' หลา ควรเช็กซ้ำ</p></div>';
 }
 function viewSurvey(){
-  return demoBanner()+holeBar()+
-  '<div class="card"><details><summary>วิธีเก็บพิกัด</summary>'+
-  '<p style="margin-top:8px"><b>จากภาพดาวเทียม:</b> เปิดสนามใน Google Maps สลับเป็นชั้นดาวเทียม ซูมไปที่กรีน คลิกขวา (มือถือ: กดค้าง) ที่ขอบกรีน แล้วคัดลอกตัวเลขพิกัดมาวางในช่องด้านล่าง</p>'+
+  return demoBanner()+holeBar()+surveyMapHTML()+
+  '<div class="card"><details><summary>วิธีเก็บพิกัดแบบอื่น</summary>'+
+  '<p style="margin-top:8px"><b>จากภาพดาวเทียมของ Google Maps:</b> เปิดสนามใน Google Maps สลับเป็นชั้นดาวเทียม ซูมไปที่กรีน คลิกขวา (มือถือ: กดค้าง) ที่ขอบกรีน แล้วคัดลอกตัวเลขพิกัดมาวางในช่องด้านล่าง</p>'+
   '<p><b>จากการยืนจริง:</b> ไปยืนที่ขอบกรีนหรือจุดทีออฟ แล้วกดปุ่มเก็บจาก GPS ยืนนิ่งๆ 10 วินาที</p>'+
   '<p class="muted">ยิ่งเก็บจากหลายแหล่งยิ่งแม่น แอปใช้ค่ากลางของทุกค่า และเตือนเมื่อค่าห่างกันเกิน '+TOL+' หลา</p>'+
   '<a href="https://www.google.com/maps/search/?api=1&amp;query=RSU+Vista+Golf+Course" target="_blank" rel="noopener">เปิด RSU Vista ใน Google Maps</a></details></div>'+
@@ -526,6 +1208,7 @@ function viewData(){
   (issueHTML?'<ul class="clean">'+issueHTML+'</ul>':'<p class="ok">ไม่พบปัญหา</p>')+
   '<p class="foot">ระยะการ์ดอ้างอิงจาก 18Birdies อาจไม่ตรงกับการ์ดจริงของสนาม และเลื่อนตามตำแหน่งทีในแต่ละวัน จึงใช้เป็นแค่ตัวเช็ก</p></div>'+
   '<div class="card"><h2>ระยะเฉลี่ยของแต่ละไม้</h2>'+stats+'</div>'+
+  mapSettingsHTML()+
   '<div class="card"><h2>สำรองและย้ายข้อมูล</h2>'+
   (storageOk?'<p class="muted">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้ ควรคัดลอกสำรองเก็บไว้ในโน้ตเป็นระยะ</p>':'<p class="err">เบราว์เซอร์นี้ไม่เก็บข้อมูลถาวร ข้อมูลจะหายเมื่อปิดหน้า คัดลอกสำรองก่อนปิดทุกครั้ง</p>')+
   '<textarea id="exp" readonly aria-label="ข้อมูลสำรอง">'+esc(exp)+'</textarea>'+
@@ -540,6 +1223,21 @@ function viewData(){
   (confirmClear?'<p class="err">ลบพิกัดและประวัติช็อตทั้งหมดในเครื่องนี้ ย้อนกลับไม่ได้</p><div class="row"><button class="btn danger" data-act="doClear">ลบทั้งหมด</button><button class="btn" data-act="cancelClear">ยกเลิก</button></div>':'<button class="btn danger" data-act="askClear">ล้างข้อมูล…</button>')+'</div>';
 }
 
+function mapSettingsHTML(){
+  var m=S.map||{},status;
+  if(inFrame) status='<p class="err">หน้านี้เปิดอยู่ในกรอบของเว็บอื่น ภาพดาวเทียมจะไม่โหลด ใช้ไฟล์ที่โฮสต์เองแทน</p>';
+  else if(!tileCfg()) status='<p class="muted">ยังไม่ได้ตั้งค่า</p>';
+  else if(typeof L==='undefined') status='<p class="muted">ตั้งค่าแล้ว กำลังโหลดไลบรารีแผนที่ (ต้องมีอินเทอร์เน็ต)</p>';
+  else status='<p class="ok">ตั้งค่าแล้ว ไปดูที่แท็บวัดระยะหรือเก็บพิกัด</p>';
+  return '<div class="card"><h2>ภาพดาวเทียมของสนาม</h2>'+
+    '<p class="muted">แสดงภาพถ่ายจริงใต้จุดทีออฟ ขอบกรีน และตำแหน่งคุณ และให้วางจุดบนภาพได้โดยไม่ต้องคัดลอกพิกัด ต้องใช้คีย์แผนที่ของคุณเอง</p>'+
+    '<ol style="margin:0 0 10px;padding-left:20px"><li>สมัครบัญชีฟรีที่ <a href="https://cloud.maptiler.com/" target="_blank" rel="noopener">cloud.maptiler.com</a> (แพ็กเกจฟรีไม่ต้องใช้บัตร ใช้ส่วนตัวหรือไม่ใช่เชิงพาณิชย์)</li><li>เปิดเมนู Keys แล้วคัดลอกคีย์</li><li>วางคีย์ในช่องนี้แล้วกดบันทึก</li></ol>'+
+    '<div class="row"><input id="mapkey" autocomplete="off" placeholder="MapTiler API key" value="'+esc(m.kind==='maptiler'||!m.kind?(m.key||''):'')+'" aria-label="คีย์แผนที่"></div>'+
+    '<details style="margin-top:8px"><summary>ผู้ให้บริการอื่น (ขั้นสูง)</summary><p class="muted" style="margin-top:6px">ใส่ URL ของ tile ภาพดาวเทียมขนาด 256 พิกเซลที่มี {z} {x} {y} ซึ่งจะใช้แทน MapTiler</p><input id="mapurl" autocomplete="off" placeholder="https://…/{z}/{x}/{y}.jpg?key=…" value="'+esc(m.kind==='custom'?(m.url||''):'')+'" aria-label="URL tile กำหนดเอง"></details>'+
+    '<div class="row" style="margin:10px 0 6px"><button class="btn primary" data-act="saveMap">บันทึก</button>'+(S.map?'<button class="btn" data-act="delMap">ลบคีย์</button>':'')+'</div>'+status+
+    '<p class="foot">คีย์เก็บในเครื่องนี้เท่านั้น ไม่รวมในข้อมูลสำรอง ภาพดาวเทียมจะชัดแค่ไหนขึ้นกับผู้ให้บริการในพื้นที่ของสนาม ลองซูมดูก่อนใช้งานจริง</p></div>';
+}
+
 /* ---------- วาดหน้าจอ ---------- */
 function render(){
   lastHTML={};
@@ -550,11 +1248,13 @@ function render(){
   });
   var c=document.querySelector('.chip[aria-pressed="true"]');
   if(c&&c.parentNode) c.parentNode.scrollLeft=c.offsetLeft-c.parentNode.clientWidth/2+c.offsetWidth/2;
+  mountMap();
   updateLive();
 }
 function updateLive(){
   var st=gpsStatus(),hp=$('hdrpill');
   if(hp){hp.className='pill '+st.cls;if(hp.textContent!==st.txt) hp.textContent=st.txt;}
+  updateMapPlayer();
   if(tab!=='play') return;
   var err=gpsErrMsg();
   setHTML('gpsinfo','<span class="pill '+st.cls+'">'+esc(st.txt)+'</span>'+(err?'<div class="err">'+esc(err)+'</div>':''));
@@ -570,6 +1270,135 @@ function updateLive(){
   var mb=$('markbtn');if(mb) mb.disabled=!getPos();
 }
 setInterval(updateLive,1000);
+
+/* ---------- แผนที่ดาวเทียม (Leaflet) ----------
+   แผนที่เดียวใช้ร่วมกันทั้งแท็บวัดระยะและเก็บพิกัด (ย้าย DOM ไปมา เพื่อไม่ให้ตำแหน่งซูม/เลื่อนหาย)
+   ภาพดาวเทียมโหลดจากผู้ให้บริการด้วยคีย์ของผู้ใช้เอง ถ้าโหลดไม่ได้จะใช้แผนผังเส้นแทน */
+var map=null,mapEl=null,crossEl=null,tileLayer=null,tileKey='',tileErr=0,gStatic=null,gPlayer=null,mapHole=0,mapTab='',surveyTarget='F',lastPlayerKey='';
+var DEFAULT_CENTER=[13.975,100.59]; /* ประมาณย่านลำลูกกา ปทุมธานี ใช้ค้นหา/เลื่อนต่อเอง */
+var COLORS={F:'#34d27b',B:'#ff8a3d',T:'#ffd23f'};
+function css(n){var v=getComputedStyle(document.documentElement).getPropertyValue(n);return (v&&v.trim())||'#1b7a49';}
+function tileCfg(){
+  var m=S.map;if(!m) return null;
+  if(m.kind==='custom'&&m.url&&/^https:\/\//.test(m.url)&&/\{z\}/.test(m.url)&&/\{x\}/.test(m.url)&&/\{y\}/.test(m.url)) return {url:m.url,att:'ภาพจากผู้ให้บริการที่ตั้งค่าเอง'};
+  if(m.key) return {url:'https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key='+encodeURIComponent(m.key),att:'&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'};
+  return null;
+}
+function mapAvailable(){return !inFrame&&typeof L!=='undefined'&&!!tileCfg();}
+function loadLeaflet(){
+  if(inFrame||typeof L!=='undefined'||!tileCfg()||document.getElementById('leaflet-js')) return;
+  var s=document.createElement('script');
+  s.id='leaflet-js';s.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
+  s.onload=function(){if(tab==='play'||tab==='survey'||tab==='data') render();};
+  document.head.appendChild(s);
+}
+function mapReason(){
+  if(inFrame) return 'ภาพดาวเทียมใช้ได้เฉพาะไฟล์ที่โฮสต์เอง หน้านี้เปิดอยู่ในกรอบของเว็บอื่น ซึ่งไม่โหลดภาพจากภายนอก';
+  if(!tileCfg()) return 'ใส่คีย์แผนที่ฟรีในแท็บข้อมูลก่อน แล้วจะเห็นภาพถ่ายสนามจริงและแตะวางจุดบนภาพได้';
+  return 'กำลังโหลดไลบรารีแผนที่ ต้องมีอินเทอร์เน็ต ถ้าไม่ขึ้นให้รีเฟรชหน้า';
+}
+function mapCardHTML(){
+  if(!mapAvailable()) return '';
+  return '<div class="card"><div id="mapslot"></div><div class="row" style="margin-top:8px"><button class="btn small" data-act="mapFit">จัดกรอบหลุมนี้</button><button class="btn small" data-act="mapMe">ไปที่ตำแหน่งฉัน</button></div><p class="foot">เส้นประขาว = ถึงขอบหน้า · เส้นประเหลือง = ถึงขอบหลัง · จุดน้ำเงินคือตำแหน่งคุณ</p></div>';
+}
+function surveyMapHTML(){
+  if(!mapAvailable()) return '<div class="card"><h2>วางจุดบนภาพดาวเทียม</h2><p class="muted">'+mapReason()+'</p>'+(inFrame?'':'<button class="btn" data-act="tab" data-tab="data">ตั้งค่าแผนที่</button>')+'</div>';
+  var seg=['F','B','T'].map(function(k){return '<button class="seg" data-act="seg" data-k="'+k+'" aria-pressed="'+(surveyTarget===k)+'">'+POINTS[k]+'</button>';}).join('');
+  return '<div class="card"><h2>วางจุดบนภาพดาวเทียม</h2><p class="muted">เลือกจุด แล้วเลื่อนแผนที่ให้กากบาทอยู่ตรงขอบกรีน ซูมเข้าให้สุดจะแม่นขึ้น จากนั้นกดวางที่กากบาท</p>'+
+    '<div class="row" role="group" aria-label="จุดที่จะวาง">'+seg+'</div><div id="mapslot" style="margin:8px 0"></div>'+
+    '<div class="row"><button class="btn primary" data-act="placeCross">วางที่กากบาท ('+POINTS[surveyTarget]+' หลุม '+S.hole+')</button><button class="btn" data-act="mapMe">ไปที่ตำแหน่งฉัน</button></div>'+
+    '<div class="row" style="margin-top:8px"><input id="geoq" autocomplete="off" value="RSU Vista Golf Course" aria-label="ค้นหาสถานที่"><button class="btn" data-act="geo">ค้นหา</button></div></div>';
+}
+function mountMap(){
+  if(tab!=='play'&&tab!=='survey') return;
+  var slot=$('mapslot');if(!slot||!mapAvailable()) return;
+  if(!mapEl){
+    mapEl=document.createElement('div');mapEl.className='mapbox';
+    crossEl=document.createElement('div');crossEl.className='cross';
+    crossEl.innerHTML='<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9"/><path d="M14 1v8M14 19v8M1 14h8M19 14h8"/></svg>';
+    mapEl.appendChild(crossEl);
+  }
+  slot.appendChild(mapEl);
+  if(!map){
+    map=L.map(mapEl,{zoomControl:true,maxZoom:21,zoomSnap:0.5}).setView(DEFAULT_CENTER,14);
+    gStatic=L.layerGroup().addTo(map);gPlayer=L.layerGroup().addTo(map);
+  }
+  var cfg=tileCfg();
+  if(tileKey!==cfg.url){
+    if(tileLayer) map.removeLayer(tileLayer);
+    tileErr=0;
+    tileLayer=L.tileLayer(cfg.url,{maxZoom:21,maxNativeZoom:19,attribution:cfg.att}).addTo(map);
+    tileLayer.on('tileerror',function(){tileErr++;if(tileErr===4) toast('โหลดภาพดาวเทียมไม่ได้ ตรวจคีย์แผนที่และอินเทอร์เน็ต');});
+    tileKey=cfg.url;
+  }
+  crossEl.style.display=tab==='survey'?'block':'none';
+  try{if(L.Browser.mobile){if(tab==='survey') map.dragging.enable(); else map.dragging.disable();}}catch(e){}
+  map.invalidateSize();
+  var refit=(mapHole!==S.hole||mapTab!==tab);
+  mapHole=S.hole;mapTab=tab;
+  drawStatic(refit);
+  lastPlayerKey='';
+  updateMapPlayer();
+}
+function drawStatic(refit){
+  if(!map||!gStatic) return;
+  gStatic.clearLayers();
+  var n=S.hole,g=holeGeo(n),marks=S.round.marks[n]||[],pts=[];
+  function dot(p,txt,fill,r,dy){
+    var m=L.circleMarker([p.lat,p.lng],{radius:r||6,color:'#ffffff',weight:2,fillColor:fill,fillOpacity:1}).addTo(gStatic);
+    if(txt) m.bindTooltip(txt,{permanent:true,direction:'right',offset:[8,dy||0],className:'lbl'});
+    pts.push([p.lat,p.lng]);
+    return m;
+  }
+  if(g.mid) L.circle([g.mid.lat,g.mid.lng],{radius:dist(g.F,g.B)/2,color:'#ffffff',weight:2,fillColor:COLORS.F,fillOpacity:0.2,interactive:false}).addTo(gStatic);
+  if(tab==='survey'){
+    ['F','B','T'].forEach(function(k){
+      var arr=(S.pts[n]&&S.pts[n][k])||[];
+      arr.forEach(function(s){dot(s,null,'#ffffff',3);});
+      var e=eff(arr);
+      if(e) dot(e,{F:'หน้า',B:'หลัง',T:'ที'}[k]+(e.n>1?' ('+e.n+')':''),COLORS[k],7,{F:9,B:-9,T:0}[k]);
+    });
+  }else{
+    if(g.T) dot(g.T,'ที',COLORS.T,6);
+    if(g.F) dot(g.F,'หน้า',COLORS.F,6,9);
+    if(g.B) dot(g.B,'หลัง',COLORS.B,6,-9);
+    if(marks.length>1) L.polyline(marks.map(function(m){return [m.lat,m.lng];}),{color:'#ffd23f',weight:2,dashArray:'4 6',interactive:false}).addTo(gStatic);
+    marks.forEach(function(m,i){
+      pts.push([m.lat,m.lng]);
+      if(i===0&&g.T) return;
+      L.marker([m.lat,m.lng],{icon:L.divIcon({className:'markicon',html:'<span>'+(i===0?'ที':i)+'</span>',iconSize:[22,22]}),interactive:false}).addTo(gStatic);
+    });
+  }
+  if(refit) fitView(pts);
+}
+function fitView(pts){
+  var pos=getPos();
+  if(tab==='play'&&pos&&pts.length&&dist(pos,{lat:pts[0][0],lng:pts[0][1]})<900) pts.push([pos.lat,pos.lng]);
+  if(pts.length){map.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:19,animate:false});return;}
+  if(pos){map.setView([pos.lat,pos.lng],18,{animate:false});return;}
+  var all=[];
+  Object.keys(S.pts).forEach(function(h){['F','B','T'].forEach(function(k){var e=eff(S.pts[h][k]);if(e) all.push([e.lat,e.lng]);});});
+  if(all.length) map.fitBounds(L.latLngBounds(all),{padding:[40,40],maxZoom:17,animate:false});
+}
+function updateMapPlayer(){
+  if(!map||!gPlayer||!mapEl||!mapEl.isConnected) return;
+  var pos=getPos(),g=holeGeo(S.hole);
+  var key=pos?[pos.lat,pos.lng,Math.round(pos.acc||0),tab,S.hole,g.F?1:0,g.B?1:0].join('|'):'none';
+  if(key===lastPlayerKey) return;
+  lastPlayerKey=key;
+  gPlayer.clearLayers();
+  if(!pos) return;
+  if(!pos.sim&&pos.acc) L.circle([pos.lat,pos.lng],{radius:pos.acc,color:'#1f6fe0',weight:1,fillColor:'#1f6fe0',fillOpacity:0.15,interactive:false}).addTo(gPlayer);
+  if(tab==='play'){
+    [['F','#ffffff'],['B','#ffd23f']].forEach(function(a){
+      var p=g[a[0]];if(!p) return;
+      L.polyline([[pos.lat,pos.lng],[p.lat,p.lng]],{color:a[1],weight:2,dashArray:'3 7',interactive:false}).addTo(gPlayer);
+      var q=L.circleMarker([pos.lat+(p.lat-pos.lat)*0.35,pos.lng+(p.lng-pos.lng)*0.35],{radius:1,opacity:0,fillOpacity:0,interactive:false}).addTo(gPlayer);
+      q.bindTooltip(String(fmt(yd(dist(pos,p)))),{permanent:true,direction:a[0]==='F'?'left':'right',offset:[a[0]==='F'?-4:4,0],className:'dist'});
+    });
+  }
+  L.circleMarker([pos.lat,pos.lng],{radius:8,color:'#ffffff',weight:3,fillColor:'#1f6fe0',fillOpacity:1,interactive:false}).addTo(gPlayer);
+}
 
 /* ---------- การกระทำ ---------- */
 function addSample(h,k,s){ensureReal();P(h,k).push(s);save();}
@@ -682,7 +1511,7 @@ var A={
     stopGPS();S.sim={lat:p.lat,lng:p.lng,acc:3};save();toast('ใช้ตำแหน่งจำลองแล้ว ไปดูที่แท็บวัดระยะ');
   },
   loadDemo:function(){S=demoState();save();render();},
-  clearDemo:function(){var t=S.teeSet;S=blankState();S.teeSet=t;save();render();},
+  clearDemo:function(){resetKeep();save();render();},
   newRound:function(){
     var has=false;for(var h in S.round.marks){if(S.round.marks[h].length) has=true;}
     if(has) S.rounds.push(S.round);
@@ -690,7 +1519,41 @@ var A={
   },
   askClear:function(){confirmClear=true;render();},
   cancelClear:function(){confirmClear=false;render();},
-  doClear:function(){var t=S.teeSet;S=blankState();S.teeSet=t;confirmClear=false;save();toast('ล้างข้อมูลแล้ว');render();}
+  doClear:function(){resetKeep();confirmClear=false;save();toast('ล้างข้อมูลแล้ว');render();},
+  saveMap:function(){
+    var key=($('mapkey').value||'').trim(),url=($('mapurl').value||'').trim();
+    if(url){
+      if(!/^https:\/\//.test(url)||!/\{z\}/.test(url)||!/\{x\}/.test(url)||!/\{y\}/.test(url)){toast('URL ต้องขึ้นต้นด้วย https:// และมี {z} {x} {y}');return;}
+      S.map={kind:'custom',url:url,key:key};
+    }else if(key){S.map={kind:'maptiler',key:key,url:''};}
+    else{S.map=null;}
+    save();loadLeaflet();toast(S.map?'บันทึกการตั้งค่าแผนที่แล้ว':'ล้างการตั้งค่าแผนที่แล้ว');render();
+  },
+  delMap:function(){S.map=null;save();toast('ลบคีย์แผนที่แล้ว');render();},
+  mapFit:function(){if(map) drawStatic(true);},
+  mapMe:function(){
+    var p=getPos();
+    if(!map){return;}
+    if(!p){toast('ยังไม่มีตำแหน่ง กดเริ่ม GPS ที่แท็บวัดระยะก่อน');return;}
+    map.setView([p.lat,p.lng],19,{animate:false});
+  },
+  seg:function(t){surveyTarget=t.dataset.k;render();},
+  placeCross:function(){
+    if(!map||!mapEl||!mapEl.isConnected) return;
+    var c=map.getCenter(),p={lat:c.lat,lng:c.lng},msg=checkNewPoint(p);
+    if(msg){toast(msg);return;}
+    addSample(S.hole,surveyTarget,{lat:p.lat,lng:p.lng,acc:0,n:1,src:'map',ts:Date.now()});
+    toast('วาง'+POINTS[surveyTarget]+' หลุม '+S.hole+' แล้ว');render();
+  },
+  geo:function(){
+    var q=($('geoq').value||'').trim();if(!q||!map) return;
+    var key=S.map&&S.map.key;
+    if(!key){toast('ค้นหาใช้บริการของ MapTiler ต้องใส่คีย์ MapTiler ก่อน หรือเลื่อนแผนที่เอง');return;}
+    fetch('https://api.maptiler.com/geocoding/'+encodeURIComponent(q)+'.json?limit=1&key='+encodeURIComponent(key))
+      .then(function(r){if(!r.ok) throw new Error('bad');return r.json();})
+      .then(function(j){var f=j.features&&j.features[0];if(!f||!f.center) throw new Error('none');map.setView([f.center[1],f.center[0]],17,{animate:false});toast('ไปที่: '+(f.place_name||q));})
+      .catch(function(){toast('ค้นหาไม่เจอ ลองเลื่อนแผนที่เอง หรือกดไปที่ตำแหน่งฉัน');});
+  }
 };
 function actGps(k){
   if(busy[k]) return;
@@ -717,8 +1580,8 @@ document.addEventListener('change',function(e){
   }else if(t.id==='teeSet'){S.teeSet=t.value;save();render();}
 });
 
-window.__greenedge={dist:dist,eff:eff,parseLL:parseLL,yd:yd,median:median,state:function(){return S;}};
-save();render();
+window.__greenedge={dist:dist,eff:eff,parseLL:parseLL,yd:yd,median:median,state:function(){return S;},map:function(){return map;},mapAvailable:mapAvailable};
+save();render();loadLeaflet();
 })();
 </script>
 </body>
