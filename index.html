@@ -751,6 +751,9 @@ nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stro
 .tile .lbl{font-size:14px;color:var(--muted)}
 .tile .val{font-family:var(--font-num);font-weight:700;font-size:clamp(96px,32vw,140px);line-height:1;font-variant-numeric:tabular-nums}
 .tile .unit{font-size:14px;color:var(--muted)}
+.tile.compact{padding:6px 14px}
+.tile.compact .val{font-size:72px}
+#tiles{scroll-margin-top:8px}
 .meta{font-size:14px;color:var(--muted);text-align:center;margin-bottom:12px}
 .plan svg{width:100%;height:auto;display:block}
 .plan .cap{text-align:center;margin-top:4px}
@@ -784,17 +787,35 @@ a{color:var(--accent)}
 .seg{flex:1 1 0;font:inherit;font-size:16px;font-weight:600;min-height:48px;padding:4px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 .seg[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .segs{display:flex;gap:8px;margin:8px 0}
-.mapbox{height:clamp(300px,44vh,520px);height:clamp(300px,44dvh,520px);border-radius:12px;overflow:hidden;isolation:isolate;background:var(--tint)}
+.mapbox{position:relative;height:clamp(300px,44vh,520px);height:clamp(300px,44dvh,520px);border-radius:12px;overflow:hidden;isolation:isolate;background:var(--tint)}
+.mapin{position:absolute;left:0;top:0;width:100%;height:100%;z-index:0}
 .mapbox.tall{height:clamp(340px,56vh,600px);height:clamp(340px,56dvh,600px)}
 .leaflet-touch .leaflet-bar a{width:40px;height:40px;line-height:40px}
 .leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:24px}
-.leaflet-tooltip.dist{background:#fff;border:0;color:#12271d;font-family:var(--font-num);font-weight:700;font-size:20px;line-height:1.1;padding:0 7px;box-shadow:0 1px 3px rgba(0,0,0,.5)}
-.leaflet-tooltip.dist::before{display:none}
-.pin span{display:grid;place-items:center;width:30px;height:30px;margin:5px;font-weight:700;font-size:14px;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.65)}
-.pin.t span{background:#ffd23f;color:#12271d;border-radius:7px}
-.pin.c span{background:#1fae63;color:#fff;border-radius:50%}
-.pin svg{width:16px;height:16px;fill:#fff;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.pin.sel span{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 6px rgba(31,111,224,.75)}
+/* ป้ายระยะ: วางข้างขวาของจุดบนจอเสมอ แม้แผนที่ถูกหมุน (--ca = มุมหมุนกลับของแผนที่) */
+.distlbl span{position:absolute;left:0;top:0;white-space:nowrap;background:#fff;color:#12271d;font-family:var(--font-num);font-weight:700;font-size:20px;line-height:1.1;padding:0 7px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.5);transform-origin:0 0;transform:rotate(var(--ca,0deg)) translate(10px,-50%)}
+/* โหมดหมุนแผนที่: ทีออฟอยู่ล่าง กรีนอยู่บน ปุ่มซูมและป้ายที่มาของภาพอยู่นอกแผนที่ที่หมุน จึงตั้งตรงเสมอ */
+.zctl,.mapbox .att,.mapbox .north{display:none}
+.rotmap .leaflet-control-container{display:none}
+.rotmap .zctl{display:flex;flex-direction:column;position:absolute;left:8px;top:8px;z-index:600;border-radius:8px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.5)}
+.zctl button{width:44px;height:44px;border:0;background:#fff;color:#12271d;font-size:26px;line-height:1;cursor:pointer;touch-action:manipulation}
+.zctl button+button{border-top:1px solid #ccc}
+.rotmap .att{display:block;position:absolute;right:0;bottom:0;z-index:600;max-width:80%;background:rgba(255,255,255,.8);color:#333;font-size:11px;line-height:1.5;padding:0 5px;border-radius:6px 0 0 0}
+.rotmap .att a{color:#0a58b6}
+.rotmap .north{display:block;position:absolute;left:10px;bottom:10px;z-index:600;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 1px 3px rgba(0,0,0,.5);pointer-events:none}
+.rotmap .north svg{display:block;width:30px;height:30px}
+.rotmap .pin.c svg{transform:rotate(var(--ca,0deg));transform-origin:6px 26px}
+.rotmap .pin.t i{transform:rotate(var(--ca,0deg))}
+.rotmap .markicon span{transform:rotate(var(--ca,0deg))}
+.pin,.simpin{touch-action:none}
+.pin.t i{display:block;width:14px;height:14px;margin:5px;background:#ffd23f;border:2px solid #fff;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.5)}
+.pin.t.sel i{box-shadow:0 0 0 1px rgba(0,0,0,.6),0 0 0 4px #1f6fe0}
+.pin.c{position:relative}
+.pin.c svg{display:block;overflow:visible;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.65))}
+.pin.c.sel::after{content:"";position:absolute;left:-4px;top:17px;width:20px;height:20px;box-sizing:border-box;border:2px solid #1f6fe0;border-radius:50%}
+.simpin i{display:block;width:16px;height:16px;margin:8px;border-radius:50%;background:#1f6fe0;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.45),0 1px 4px rgba(0,0,0,.6)}
+.zbadge{position:absolute;top:8px;right:8px;z-index:500;background:rgba(0,0,0,.6);color:#fff;font-size:12px;line-height:1.4;padding:1px 8px;border-radius:10px;pointer-events:none}
+.card.test{border-color:var(--warn)}
 .markicon span{display:grid;place-items:center;width:24px;height:24px;font-weight:700;font-size:12px;border:2px solid #fff;color:#12271d;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.6)}
 @media (max-height:480px) and (orientation:landscape){.mapbox,.mapbox.tall{height:max(220px,70vh)}}
 </style>
@@ -864,7 +885,15 @@ function eff(arr){
 
 /* ---------- สถานะแอป: หนึ่งหมุดทีออฟ (T) และหนึ่งหมุดกลางกรีน (C) ต่อหลุม ---------- */
 function newRound(){return {id:Date.now(),date:new Date().toISOString().slice(0,10),marks:{}};}
-function blankState(){return {v:2,course:'RSU Vista Golf Course',hole:1,pts:{},round:newRound(),rounds:[],sim:null,map:null};}
+function blankState(){return {v:2,course:'RSU Vista Golf Course',hole:1,pts:{},round:newRound(),rounds:[],sim:null,test:false,rot:true,map:null};}
+/* ตั้งค่าแผนที่: use = maptiler | esri | custom, คีย์เก็บแยกตามผู้ให้บริการ, maxZoom = ซูมเข้าได้สูงสุด (ภาพจริงมีรายละเอียดถึงระดับหนึ่งเท่านั้น) */
+function normMap(m){
+  if(!m||typeof m!=='object') return null;
+  if(m.keys||m.use){return {use:m.use||'maptiler',keys:{maptiler:(m.keys&&m.keys.maptiler)||'',esri:(m.keys&&m.keys.esri)||''},url:m.url||'',maxZoom:+m.maxZoom>=15&&+m.maxZoom<=21?+m.maxZoom:18};}
+  /* รูปแบบเก่า: {kind,key,url} */
+  var use=m.kind==='custom'?'custom':'maptiler';
+  return {use:use,keys:{maptiler:(use==='maptiler'?m.key:'')||'',esri:''},url:m.url||'',maxZoom:18};
+}
 function okPt(p){return !!p&&typeof p==='object'&&!Array.isArray(p)&&validLL(p.lat,p.lng)&&p.src!=='demo';}
 function cleanPt(p){return {lat:p.lat,lng:p.lng,src:p.src||'map',acc:p.acc||0,ts:p.ts||0};}
 /* รับได้ทั้งรูปแบบใหม่ (T,C เป็นหมุดเดียว) และเก่า (F,B,T เป็นรายการค่า): กลางกรีนเก่า = กึ่งกลางขอบหน้า-หลัง */
@@ -890,7 +919,8 @@ function load(){
     var o=JSON.parse(t);if(!o||typeof o!=='object'||!o.pts||!o.round) return null;
     var s=blankState();
     s.hole=(o.hole>=1&&o.hole<=18)?o.hole:1;
-    s.map=o.map||null;
+    s.rot=o.rot!==false;
+    s.map=normMap(o.map); /* โหมดทดสอบไม่ถูกเก็บข้ามการเปิดแอป ตั้งใจให้ปิดทุกครั้งที่เปิดใหม่ */
     if(o.v===1&&o.demo) return s; /* ข้อมูลตัวอย่างจำลองจากเวอร์ชันแรก ทิ้งทั้งหมด */
     s.pts=migratePts(o.pts);
     s.round=o.round;if(!s.round.marks) s.round.marks={};
@@ -913,7 +943,7 @@ function hasData(){
 /* ---------- GPS ---------- */
 var watchId=null,fix=null,gpsErr=null,wl=null;
 function getPos(){
-  if(S.sim) return {lat:S.sim.lat,lng:S.sim.lng,acc:S.sim.acc,sim:true};
+  if(S.test&&S.sim) return {lat:S.sim.lat,lng:S.sim.lng,acc:S.sim.acc,sim:true};
   if(fix&&Date.now()-fix.ts<30000) return fix;
   return null;
 }
@@ -921,7 +951,7 @@ function lockScreen(){try{if('wakeLock' in navigator){navigator.wakeLock.request
 function startGPS(){
   if(watchId!==null) return;
   if(!('geolocation' in navigator)){gpsErr={code:0,msg:'เบราว์เซอร์นี้ไม่รองรับ GPS'};updateLive();return;}
-  S.sim=null;save();gpsErr=null;
+  S.sim=null;S.test=false;save();gpsErr=null;
   try{
     watchId=navigator.geolocation.watchPosition(onFix,onGeoErr,{enableHighAccuracy:true,maximumAge:0,timeout:30000});
   }catch(e){gpsErr={code:1,msg:String(e&&e.message||e)};watchId=null;}
@@ -946,7 +976,7 @@ function onGeoErr(e){
 }
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&watchId!==null) lockScreen();});
 function gpsStatus(){
-  if(S.sim) return {cls:'warn',txt:'ตำแหน่งจำลอง'};
+  if(S.test) return {cls:'warn',txt:'โหมดทดสอบ'};
   if(watchId===null) return gpsErr&&gpsErr.code===1?{cls:'bad',txt:'GPS ถูกบล็อก'}:{cls:'',txt:'GPS ปิด'};
   if(!fix) return {cls:'warn',txt:'กำลังหาสัญญาณ…'};
   if(Date.now()-fix.ts>10000) return {cls:'bad',txt:'สัญญาณหาย'};
@@ -957,7 +987,7 @@ function gpsStatus(){
 }
 function gpsErrMsg(){
   if(!gpsErr) return '';
-  if(gpsErr.code===1) return inFrame?'หน้านี้เปิดอยู่ในกรอบของเว็บอื่น ซึ่งบล็อกตำแหน่ง ให้เปิดไฟล์ที่โฮสต์เองแบบเต็มหน้า หรือลองด้วยตำแหน่งจำลองในแท็บข้อมูล':'ไม่ได้รับอนุญาตให้ใช้ตำแหน่ง เปิดสิทธิ์ตำแหน่งของเบราว์เซอร์ในการตั้งค่าเครื่อง แล้วกดเริ่ม GPS ใหม่';
+  if(gpsErr.code===1) return inFrame?'หน้านี้เปิดอยู่ในกรอบของเว็บอื่น ซึ่งบล็อกตำแหน่ง ให้เปิดไฟล์ที่โฮสต์เองแบบเต็มหน้า หรือลองด้วยโหมดทดสอบในแท็บข้อมูล':'ไม่ได้รับอนุญาตให้ใช้ตำแหน่ง เปิดสิทธิ์ตำแหน่งของเบราว์เซอร์ในการตั้งค่าเครื่อง แล้วกดเริ่ม GPS ใหม่';
   if(gpsErr.code===2) return 'หาตำแหน่งไม่ได้ตอนนี้ ลองย้ายไปที่โล่ง';
   if(gpsErr.code===3) return 'รอสัญญาณนานเกินไป กำลังลองต่อ';
   return gpsErr.msg||'GPS มีปัญหา';
@@ -969,6 +999,27 @@ var lastHTML={};
 function setHTML(id,html){var el=$(id);if(!el||lastHTML[id]===html)return;el.innerHTML=html;lastHTML[id]=html;}
 function toast(msg){var t=$('toast');t.textContent=msg;t.className='on';clearTimeout(toast.t);toast.t=setTimeout(function(){t.className='';},3800);}
 function pickTarget(){var g=holeGeo(S.hole);surveyTarget=!g.T?'T':(!g.C?'C':surveyTarget);}
+/* โหมดทดสอบ: ตำแหน่งจำลองแทน GPS ลากจุดน้ำเงินบนแผนที่แท็บวัดระยะได้ ตั้งต้นที่ 60% ของทางจากทีไปกลางกรีน (เหมือนหลังตีไดรฟ์) */
+function defaultSim(){
+  var g=holeGeo(S.hole);
+  if(g.T&&g.C) return {lat:g.T.lat+(g.C.lat-g.T.lat)*0.6,lng:g.T.lng+(g.C.lng-g.T.lng)*0.6,acc:3};
+  if(g.C) return {lat:g.C.lat-150*YD/mLat(g.C.lat),lng:g.C.lng,acc:3};
+  if(map){var c=map.getCenter();return {lat:c.lat,lng:c.lng,acc:3};}
+  return {lat:DEFAULT_CENTER[0],lng:DEFAULT_CENTER[1],acc:3};
+}
+function setTest(on){
+  if(on){stopGPS();S.test=true;if(!S.sim) S.sim=defaultSim();}
+  else{S.test=false;S.sim=null;}
+  save();render();
+}
+function testBoxHTML(){
+  if(!S.test||!S.sim) return '';
+  var g=holeGeo(S.hole),p=S.sim,d=g.C?fmt(yd(dist(p,g.C))):null;
+  return '<div class="card test"><div class="row spread"><b>โหมดทดสอบ (ไม่ใช่ GPS จริง)</b><button class="btn small" data-act="simReset">วางกลางทาง</button></div>'+
+    '<p class="muted" style="margin:4px 0">'+(mapAvailable()?'ลากจุดน้ำเงินบนแผนที่เพื่อเปลี่ยนตำแหน่งของคุณ':'ใส่พิกัดจำลองในแท็บข้อมูล')+'</p>'+
+    '<div class="mono" style="font-size:15px">'+p.lat.toFixed(7)+', '+p.lng.toFixed(7)+'</div>'+
+    '<div>ถึงกลางกรีน <b>'+(d===null?'–':d)+'</b> หลา</div></div>';
+}
 
 function holeBar(){
   var n=S.hole,chips='';
@@ -986,7 +1037,7 @@ function holeBar(){
 function viewPlay(){
   return holeBar()+
   '<div class="card"><div class="row spread"><div id="gpsinfo" aria-live="polite"></div><button id="gpsbtn" class="btn" data-act="gpsToggle"></button></div></div>'+
-  '<div id="suggest"></div><div id="tiles"></div>'+mapCardHTML()+'<div id="plan"></div>'+
+  '<div id="suggest"></div><div id="tiles"></div>'+mapCardHTML()+'<div id="testbox"></div><div id="plan"></div>'+
   '<div class="card"><h2>ช็อตของหลุมนี้</h2><div id="shots">'+shotsHTML()+'</div></div>';
 }
 function tilesHTML(){
@@ -995,7 +1046,7 @@ function tilesHTML(){
   var v=pos?fmt(yd(dist(pos,g.C))):null;
   var meta='';
   if(g.T) meta='<div class="meta">ทีออฟถึงกลางกรีน '+fmt(yd(dist(g.T,g.C)))+' หลา · การ์ด '+CARD[S.hole-1]+' หลา</div>';
-  return '<div class="tile"><div class="lbl">ถึงกลางกรีน</div><div class="val">'+(v===null?'–':v)+'</div><div class="unit">'+(pos?'หลา':'รอตำแหน่ง GPS')+'</div></div>'+meta;
+  return '<div class="tile'+(S.test?' compact':'')+'"><div class="lbl">ถึงกลางกรีน</div><div class="val">'+(v===null?'–':v)+'</div><div class="unit">'+(pos?'หลา':'รอตำแหน่ง GPS')+'</div></div>'+meta;
 }
 function minDist(h,pos){
   var g=holeGeo(h),best=Infinity;
@@ -1095,7 +1146,7 @@ function pinsCard(){
   var g=holeGeo(S.hole);
   var rows=['T','C'].map(function(k){
     var p=g[k];
-    return '<li class="row spread"><span><b>'+POINTS[k]+'</b> '+(p?'<span class="mono">'+p.lat.toFixed(5)+', '+p.lng.toFixed(5)+'</span> <span class="muted">· '+esc(srcLabel(p))+'</span>':'<span class="muted">ยังไม่ได้ปัก</span>')+'</span>'+
+    return '<li class="row spread"><span><b>'+POINTS[k]+'</b> '+(p?'<span class="mono">'+p.lat.toFixed(7)+', '+p.lng.toFixed(7)+'</span> <span class="muted">· '+esc(srcLabel(p))+'</span>':'<span class="muted">ยังไม่ได้ปัก</span>')+'</span>'+
       (p?'<button class="btn small" data-act="delPin" data-k="'+k+'" aria-label="ลบหมุด'+POINTS[k]+'">ลบ</button>':'')+'</li>';
   }).join('');
   var chk='';
@@ -1173,26 +1224,40 @@ function viewData(){
   '<div class="row" style="margin:8px 0 14px"><button class="btn" data-act="copyExp"'+(exp?'':' disabled')+'>คัดลอกข้อมูลสำรอง</button></div>'+
   '<textarea id="imp" aria-label="วางข้อมูลสำรอง" placeholder="วางข้อมูลสำรองที่นี่"></textarea>'+
   '<button class="btn block" style="margin-top:8px" data-act="import">นำเข้า (หลุมที่มีหมุดอยู่แล้วจะไม่ถูกทับ)</button></div>'+
-  '<div class="card"><h2>ทดลองและเริ่มรอบใหม่</h2>'+
-  (inFrame?'<p class="muted">หน้านี้เปิดอยู่ในกรอบของเว็บอื่น GPS จริงอาจใช้ไม่ได้ ใช้ตำแหน่งจำลองเพื่อลองหน้าจอ</p>':'')+
-  '<div class="row" style="margin-bottom:8px"><input id="simin" inputmode="decimal" autocomplete="off" placeholder="ตำแหน่งจำลอง เช่น 13.98765, 100.60123" aria-label="ตำแหน่งจำลอง"><button class="btn" data-act="setSim">ใช้ตำแหน่งนี้</button></div>'+
-  '<div class="row"><button class="btn" data-act="newRound">เริ่มรอบใหม่ (เก็บประวัติช็อตเดิม)</button></div></div>'+
+  '<div class="card'+(S.test?' test':'')+'"><h2>โหมดทดสอบ (สำหรับพัฒนา)</h2>'+
+  '<p class="muted">ใช้ตำแหน่งจำลองแทน GPS ลากจุดน้ำเงินบนแผนที่ในแท็บวัดระยะเพื่อดูว่าตัวเลขระยะเปลี่ยนอย่างไร ไม่ต้องไปสนาม ปิดไว้ตอนใช้งานจริง (ปิดเองทุกครั้งที่เปิดแอปใหม่)</p>'+
+  (inFrame?'<p class="muted">หน้านี้เปิดอยู่ในกรอบของเว็บอื่น GPS จริงอาจใช้ไม่ได้ ใช้โหมดทดสอบเพื่อลองหน้าจอ</p>':'')+
+  '<button class="btn'+(S.test?' primary':'')+'" data-act="testToggle" aria-pressed="'+!!S.test+'">'+(S.test?'โหมดทดสอบ: เปิดอยู่ (กดเพื่อปิด)':'เปิดโหมดทดสอบ')+'</button>'+
+  (S.test&&S.sim?'<p class="mono" style="margin:10px 0 6px">ตอนนี้: '+S.sim.lat.toFixed(7)+', '+S.sim.lng.toFixed(7)+'</p>'+
+  '<div class="row"><input id="simin" inputmode="decimal" autocomplete="off" placeholder="หรือพิมพ์พิกัด เช่น 13.98765, 100.60123" aria-label="พิกัดจำลอง"><button class="btn" data-act="setSim">ย้ายไปที่นี่</button></div>':'')+'</div>'+
+  '<div class="card"><h2>เริ่มรอบใหม่</h2><button class="btn" data-act="newRound">เริ่มรอบใหม่ (เก็บประวัติช็อตเดิม)</button></div>'+
   '<div class="card"><h2>ล้างข้อมูลทั้งหมด</h2>'+
   (confirmClear?'<p class="err">ลบหมุดและประวัติช็อตทั้งหมดในเครื่องนี้ ย้อนกลับไม่ได้ (คีย์แผนที่ยังอยู่)</p><div class="row"><button class="btn danger" data-act="doClear">ลบทั้งหมด</button><button class="btn" data-act="cancelClear">ยกเลิก</button></div>':'<button class="btn danger" data-act="askClear">ล้างข้อมูล…</button>')+'</div>';
 }
 function mapSettingsHTML(){
-  var m=S.map||{},status;
+  var m=S.map||normMap({use:'maptiler'}),k=m.keys||{},status;
   if(inFrame) status='<p class="err">หน้านี้เปิดอยู่ในกรอบของเว็บอื่น ภาพดาวเทียมจะไม่โหลด ใช้ไฟล์ที่โฮสต์เองแทน</p>';
   else if(!tileCfg()) status='<p class="muted">ยังไม่ได้ตั้งค่า</p>';
   else if(typeof L==='undefined') status='<p class="muted">ตั้งค่าแล้ว กำลังโหลดไลบรารีแผนที่ (ต้องมีอินเทอร์เน็ต)</p>';
   else status='<p class="ok">ตั้งค่าแล้ว ไปดูที่แท็บวัดระยะหรือปักจุด</p>';
+  function opt(v,t){return '<option value="'+v+'"'+(m.use===v?' selected':'')+'>'+t+'</option>';}
+  var zs=[17,18,19,20].map(function(z){return '<option value="'+z+'"'+(zoomCap()===z?' selected':'')+'>ระดับ '+z+'</option>';}).join('');
   return '<div class="card"><h2>ภาพดาวเทียมของสนาม</h2>'+
-    '<p class="muted">แสดงภาพถ่ายจริงใต้หมุดทีออฟ กลางกรีน และตำแหน่งคุณ และให้ปักหมุดบนภาพได้โดยไม่ต้องคัดลอกพิกัด ต้องใช้คีย์แผนที่ของคุณเอง</p>'+
-    '<ol style="margin:0 0 10px;padding-left:20px"><li>สมัครบัญชีฟรีที่ <a href="https://cloud.maptiler.com/" target="_blank" rel="noopener">cloud.maptiler.com</a> (แพ็กเกจฟรีไม่ต้องใช้บัตร ใช้ส่วนตัวหรือไม่ใช่เชิงพาณิชย์)</li><li>เปิดเมนู Keys แล้วคัดลอกคีย์</li><li>วางคีย์ในช่องนี้แล้วกดบันทึก</li></ol>'+
-    '<div class="row"><input id="mapkey" autocomplete="off" placeholder="MapTiler API key" value="'+esc(m.kind==='maptiler'||!m.kind?(m.key||''):'')+'" aria-label="คีย์แผนที่"></div>'+
-    '<details style="margin-top:8px"><summary>ผู้ให้บริการอื่น (ขั้นสูง)</summary><p class="muted" style="margin-top:6px">ใส่ URL ของ tile ภาพดาวเทียมขนาด 256 พิกเซลที่มี {z} {x} {y} ซึ่งจะใช้แทน MapTiler</p><input id="mapurl" autocomplete="off" placeholder="https://…/{z}/{x}/{y}.jpg?key=…" value="'+esc(m.kind==='custom'?(m.url||''):'')+'" aria-label="URL tile กำหนดเอง"></details>'+
-    '<div class="row" style="margin:10px 0 6px"><button class="btn primary" data-act="saveMap">บันทึก</button>'+(S.map?'<button class="btn" data-act="delMap">ลบคีย์</button>':'')+'</div>'+status+
-    '<p class="foot">คีย์เก็บในเครื่องนี้เท่านั้น ไม่รวมในข้อมูลสำรอง ภาพดาวเทียมจะชัดแค่ไหนขึ้นกับผู้ให้บริการในพื้นที่ของสนาม ลองซูมดูก่อนใช้งานจริง</p></div>';
+    '<p class="muted">แสดงภาพถ่ายจริงใต้หมุดทีออฟ กลางกรีน และตำแหน่งคุณ และให้ปักหมุดบนภาพได้ ต้องใช้คีย์ของคุณเอง</p>'+
+    '<label class="muted" for="mapuse">ใช้ภาพจาก</label>'+
+    '<div class="row" style="margin:4px 0 10px"><select id="mapuse" aria-label="ผู้ให้บริการภาพ">'+opt('maptiler','MapTiler (ฟรี)')+opt('esri','Esri World Imagery')+opt('custom','URL กำหนดเอง (ขั้นสูง)')+'</select></div>'+
+    '<label class="muted" for="mapkey-maptiler">คีย์ MapTiler</label>'+
+    '<div class="row" style="margin:4px 0 6px"><input id="mapkey-maptiler" autocomplete="off" placeholder="MapTiler API key" value="'+esc(k.maptiler||'')+'"></div>'+
+    '<details><summary>วิธีขอคีย์ MapTiler</summary><ol style="margin:0 0 8px;padding-left:20px"><li>สมัครบัญชีฟรีที่ <a href="https://cloud.maptiler.com/" target="_blank" rel="noopener">cloud.maptiler.com</a> (ไม่ต้องใช้บัตร ใช้ส่วนตัวหรือไม่ใช่เชิงพาณิชย์)</li><li>เปิดเมนู Keys แล้วคัดลอกคีย์มาวาง</li></ol></details>'+
+    '<label class="muted" for="mapkey-esri" style="display:block;margin-top:8px">คีย์ Esri (ArcGIS API key)</label>'+
+    '<div class="row" style="margin:4px 0 6px"><input id="mapkey-esri" autocomplete="off" placeholder="ArcGIS API key" value="'+esc(k.esri||'')+'"></div>'+
+    '<details><summary>วิธีขอคีย์ Esri (ลองถ้าอยากได้ภาพคมกว่า)</summary><ol style="margin:0 0 8px;padding-left:20px"><li>สมัครบัญชีนักพัฒนาที่ <a href="https://developers.arcgis.com/" target="_blank" rel="noopener">developers.arcgis.com</a></li><li>สร้าง API key และเลือกสิทธิ์ Basemaps</li><li>วางคีย์ในช่องด้านบน เลือก “ใช้ภาพจาก” เป็น Esri แล้วกดบันทึก</li></ol><p class="muted">ตรวจเงื่อนไขแพ็กเกจฟรีของ Esri ตอนสมัครด้วย ภาพของ Esri ที่สนามนี้คมแค่ไหนผมยังไม่ได้ตรวจ ต้องลองดูเอง</p></details>'+
+    '<details style="margin-top:4px"><summary>ผู้ให้บริการอื่น (ขั้นสูง)</summary><p class="muted" style="margin-top:6px">ใส่ URL ของ tile ภาพดาวเทียมที่มี {z} {x} {y} แล้วเลือก “URL กำหนดเอง” ด้านบน</p><input id="mapurl" autocomplete="off" placeholder="https://…/{z}/{x}/{y}.jpg?key=…" value="'+esc(m.url||'')+'" aria-label="URL tile กำหนดเอง"></details>'+
+    '<label class="muted" for="mapzoom" style="display:block;margin-top:10px">ซูมเข้าได้สูงสุด</label>'+
+    '<div class="row" style="margin:4px 0 4px"><select id="mapzoom" aria-label="ซูมเข้าได้สูงสุด">'+zs+'</select></div>'+
+    '<p class="muted">ภาพดาวเทียมมีรายละเอียดจริงแค่ถึงระดับหนึ่ง ซูมเกินนั้นจะแตกเป็นเม็ด ดูเลข “ซูม” มุมขวาบนของแผนที่ แล้วตั้งให้เท่ากับระดับที่ยังดูไม่แตก</p>'+
+    '<div class="row" style="margin:10px 0 6px"><button class="btn primary" data-act="saveMap">บันทึก</button>'+(S.map?'<button class="btn" data-act="delMap">ลบการตั้งค่า</button>':'')+'</div>'+status+
+    '<p class="foot">คีย์เก็บในเครื่องนี้เท่านั้น ไม่รวมในข้อมูลสำรอง</p></div>';
 }
 
 /* ---------- วาดหน้าจอ ---------- */
@@ -1217,10 +1282,11 @@ function updateLive(){
   setHTML('gpsinfo','<span class="pill '+st.cls+'">'+esc(st.txt)+'</span>'+(err?'<div class="err">'+esc(err)+'</div>':''));
   var b=$('gpsbtn');
   if(b){
-    var lab=S.sim?'ปิดตำแหน่งจำลอง':(watchId===null?'เริ่ม GPS':'หยุด GPS');
+    var lab=S.test?'ปิดโหมดทดสอบ':(watchId===null?'เริ่ม GPS':'หยุด GPS');
     if(b.textContent!==lab) b.textContent=lab;
-    b.className='btn'+((watchId===null&&!S.sim)?' primary':'');
+    b.className='btn'+((watchId===null&&!S.test)?' primary':'');
   }
+  setHTML('testbox',testBoxHTML());
   setHTML('tiles',tilesHTML());
   setHTML('suggest',suggestHTML());
   setHTML('plan',planHTML());
@@ -1231,12 +1297,16 @@ setInterval(updateLive,1000);
 /* ---------- แผนที่ดาวเทียม (Leaflet) ----------
    แผนที่เดียวใช้ร่วมกันทั้งแท็บวัดระยะและปักจุด (ย้าย DOM ไปมา เพื่อไม่ให้ตำแหน่งซูม/เลื่อนหาย)
    ภาพดาวเทียมโหลดจากผู้ให้บริการด้วยคีย์ของผู้ใช้เอง ถ้าโหลดไม่ได้จะใช้แผนผังเส้นแทน */
-var map=null,mapEl=null,tileLayer=null,tileKey='',tileErr=0,gStatic=null,gPlayer=null,mapHole=0,mapTab='',lastPlayerKey='';
+var map=null,mapEl=null,mapWrap=null,zb=null,attEl=null,northEl=null,simMk=null,simDrag=false,simGrab=null,tileLayer=null,tileKey='',tileErr=0,gStatic=null,gPlayer=null,mapHole=0,mapTab='',lastPlayerKey='',rotAngle=null,rotBearing=0;
 var DEFAULT_CENTER=[13.975,100.59]; /* ประมาณย่านลำลูกกา ปทุมธานี */
+function validTileUrl(u){return /^https:\/\//.test(u||'')&&/\{z\}/.test(u)&&/\{x\}/.test(u)&&/\{y\}/.test(u);}
+function zoomCap(){var z=S.map&&+S.map.maxZoom;return (z>=15&&z<=21)?z:18;}
 function tileCfg(){
   var m=S.map;if(!m) return null;
-  if(m.kind==='custom'&&m.url&&/^https:\/\//.test(m.url)&&/\{z\}/.test(m.url)&&/\{x\}/.test(m.url)&&/\{y\}/.test(m.url)) return {url:m.url,att:'ภาพจากผู้ให้บริการที่ตั้งค่าเอง'};
-  if(m.key) return {url:'https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key='+encodeURIComponent(m.key),att:'&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'};
+  var k=m.keys||{};
+  if(m.use==='custom') return validTileUrl(m.url)?{url:m.url,att:'ภาพจากผู้ให้บริการที่ตั้งค่าเอง'}:null;
+  if(m.use==='esri') return k.esri?{url:'https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?token='+encodeURIComponent(k.esri),att:'Esri, Maxar, Earthstar Geographics, and the GIS User Community'}:null;
+  if(k.maptiler) return {url:'https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key='+encodeURIComponent(k.maptiler),att:'&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'};
   return null;
 }
 function mapAvailable(){return !inFrame&&typeof L!=='undefined'&&!!tileCfg();}
@@ -1254,38 +1324,133 @@ function mapReason(){
 }
 function mapCardHTML(){
   if(!mapAvailable()) return '';
-  return '<div class="card"><div id="mapslot"></div><div class="row" style="margin-top:8px"><button class="btn small" data-act="mapFit">จัดกรอบหลุมนี้</button><button class="btn small" data-act="mapMe">ไปที่ตำแหน่งฉัน</button></div><p class="foot">เส้นประขาว = ถึงกลางกรีน · จุดน้ำเงินคือตำแหน่งคุณ · สี่เหลี่ยมเหลือง = ทีออฟ · วงกลมเขียว = กลางกรีน</p></div>';
+  return '<div class="card"><div id="mapslot"></div><div class="row" style="margin-top:8px"><button class="btn small" data-act="mapFit">จัดกรอบหลุมนี้</button><button class="btn small" data-act="mapMe">ไปที่ตำแหน่งฉัน</button><button class="btn small" data-act="rotToggle" aria-pressed="'+(S.rot!==false)+'">หมุนตามหลุม: '+(S.rot!==false?'เปิด':'ปิด')+'</button></div><p class="foot">เส้นประขาว = ถึงกลางกรีน · จุดน้ำเงินคือตำแหน่งคุณ · สี่เหลี่ยมเหลือง = ทีออฟ · ธงเขียว = กลางกรีน · ปักทีออฟกับกลางกรีนครบแล้ว แผนที่จะหมุนให้ทีออฟอยู่ล่าง กรีนอยู่บน</p></div>';
 }
+/* หมุดเล็กและบางเพื่อไม่บังจุดที่ปัก: ทีออฟ = จัตุรัสเหลืองเล็ก (จุดจริงอยู่ตรงกลาง) กลางกรีน = ธงเล็ก (จุดจริงอยู่ที่โคนเสา) */
+var FLAG='<svg viewBox="0 0 28 30" width="28" height="30" aria-hidden="true"><path d="M6 26V4" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/><path d="M6 26V4" stroke="#12271d" stroke-width="1.4" stroke-linecap="round"/><path d="M6 4l13 5L6 14z" fill="#1fae63" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/><circle cx="6" cy="26" r="2.6" fill="#1fae63" stroke="#fff" stroke-width="1.4"/></svg>';
 function pinIcon(k,sel){
-  var inner=k==='T'?'ที':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21V3"/><path d="M7 4h11l-3 3.5 3 3.5H7"/></svg>';
-  return L.divIcon({className:'pin '+(k==='T'?'t':'c')+(sel?' sel':''),html:'<span>'+inner+'</span>',iconSize:[40,40],iconAnchor:[20,20]});
+  if(k==='T') return L.divIcon({className:'pin t'+(sel?' sel':''),html:'<i></i>',iconSize:[24,24],iconAnchor:[12,12]});
+  return L.divIcon({className:'pin c'+(sel?' sel':''),html:FLAG,iconSize:[28,30],iconAnchor:[6,26]});
+}
+/* โหมดหมุน: แท็บวัดระยะ + มีทีออฟและกลางกรีนครบ + เปิดตัวเลือกไว้ → หมุนแผนที่ให้ทิศทีออฟไปกรีนชี้ขึ้นบนจอ
+   หมุนด้วย CSS ทั้งกล่อง Leaflet (ขยายเป็นสี่เหลี่ยมจัตุรัสใหญ่พอให้ไม่เห็นมุมว่าง) แล้วปิดการลาก/ซูมด้วยนิ้วของ Leaflet
+   เพราะนิ้วจะไปคนละทิศกับแผนที่ที่หมุน ใช้ปุ่ม + − ของเราแทน */
+function calcRot(){
+  rotAngle=null;
+  if(tab!=='play'||S.rot===false) return;
+  var g=holeGeo(S.hole);if(!g.T||!g.C) return;
+  var m=(g.T.lat+g.C.lat)/2,dn=(g.C.lat-g.T.lat)*mLat(m),de=(g.C.lng-g.T.lng)*mLng(m);
+  if(Math.sqrt(dn*dn+de*de)<20) return; /* ทีออฟกับกรีนใกล้กันเกินไป ทิศไม่น่าเชื่อถือ */
+  rotBearing=Math.atan2(de,dn);        /* ทิศเข็มทิศจากทีออฟไปกรีน (เรเดียน ตามเข็มจากทิศเหนือ) */
+  rotAngle=-rotBearing*180/Math.PI;    /* หมุนทวนเข็มเท่าทิศนั้น ทิศนั้นจึงชี้ขึ้นบนจอ */
+}
+function layoutMap(){
+  if(!map||!mapWrap) return;
+  var W=mapWrap.clientWidth,H=mapWrap.clientHeight,r=rotAngle!==null;
+  mapWrap.classList.toggle('rotmap',r);
+  if(r&&W>0&&H>0){
+    var D=Math.ceil(Math.sqrt(W*W+H*H))+2;
+    mapEl.style.width=D+'px';mapEl.style.height=D+'px';
+    mapEl.style.left=((W-D)/2)+'px';mapEl.style.top=((H-D)/2)+'px';
+    mapEl.style.transform='rotate('+rotAngle+'deg)';
+    mapEl.style.setProperty('--ca',(-rotAngle)+'deg');
+    if(northEl) northEl.style.transform='rotate('+rotAngle+'deg)';
+  }else{
+    ['width','height','left','top','transform'].forEach(function(k){mapEl.style[k]='';});
+    mapEl.style.removeProperty('--ca');
+    if(northEl) northEl.style.transform='';
+    if(r) mapWrap.classList.remove('rotmap');
+  }
+  map.invalidateSize({animate:false});
+}
+function applyInteraction(){
+  var r=mapWrap.classList.contains('rotmap');
+  ['touchZoom','doubleClickZoom','scrollWheelZoom','boxZoom','keyboard'].forEach(function(h){if(map[h]){if(r) map[h].disable(); else map[h].enable();}});
+  try{
+    if(r) map.dragging.disable();
+    else if(L.Browser.mobile&&tab!=='survey') map.dragging.disable(); /* มือถือ: หน้าวัดระยะให้นิ้วเลื่อนหน้าได้ */
+    else map.dragging.enable();
+  }catch(e){}
 }
 function mountMap(){
   if(tab!=='play'&&tab!=='survey') return;
   var slot=$('mapslot');if(!slot||!mapAvailable()) return;
-  if(!mapEl){mapEl=document.createElement('div');}
-  mapEl.classList.add('mapbox');mapEl.classList.toggle('tall',tab==='survey'); /* ห้ามเขียน className ทับ เพราะ Leaflet ใส่คลาสของตัวเองไว้ที่ element นี้ */
-  slot.appendChild(mapEl);
+  if(!mapWrap){
+    mapWrap=document.createElement('div');mapWrap.className='mapbox'; /* กรอบนอก (คลาส mapbox) กับกล่อง Leaflet ข้างใน (mapin) แยกกัน เพื่อให้หมุนเฉพาะแผนที่ได้ ห้ามเขียน className ทับกล่อง Leaflet */
+    mapEl=document.createElement('div');mapEl.className='mapin';mapWrap.appendChild(mapEl);
+    zb=document.createElement('div');zb.className='zbadge';mapWrap.appendChild(zb);
+    var zc=document.createElement('div');zc.className='zctl';
+    zc.innerHTML='<button type="button" data-act="mapZoomIn" aria-label="ซูมเข้า">+</button><button type="button" data-act="mapZoomOut" aria-label="ซูมออก">&minus;</button>';
+    mapWrap.appendChild(zc);
+    attEl=document.createElement('div');attEl.className='att';mapWrap.appendChild(attEl);
+    northEl=document.createElement('div');northEl.className='north';northEl.setAttribute('aria-hidden','true');
+    northEl.innerHTML='<svg viewBox="0 0 30 30"><path d="M15 4l5 11H10z" fill="#d23b2e"/><path d="M15 26l-5-11h10z" fill="#8a8f8c"/><circle cx="15" cy="15" r="1.6" fill="#fff"/></svg>';
+    mapWrap.appendChild(northEl);
+  }
+  mapWrap.classList.toggle('tall',tab==='survey');
+  slot.appendChild(mapWrap);
   if(!map){
-    map=L.map(mapEl,{zoomControl:true,maxZoom:21,zoomSnap:0.5}).setView(DEFAULT_CENTER,14);
+    /* zoomSnap 1: ใช้ tile ระดับเต็มเสมอ ไม่ขยายครึ่งระดับซึ่งทำให้เบลอ */
+    map=L.map(mapEl,{zoomControl:true,maxZoom:zoomCap(),zoomSnap:1}).setView(DEFAULT_CENTER,14);
     gStatic=L.layerGroup().addTo(map);gPlayer=L.layerGroup().addTo(map);
     map.on('click',onMapClick);
+    map.on('zoomend',function(){zb.textContent='ซูม '+map.getZoom();});
   }
-  var cfg=tileCfg();
-  if(tileKey!==cfg.url){
+  var cfg=tileCfg(),tk=cfg.url+'|'+zoomCap();
+  if(tileKey!==tk){
     if(tileLayer) map.removeLayer(tileLayer);
     tileErr=0;
-    tileLayer=L.tileLayer(cfg.url,{maxZoom:21,maxNativeZoom:19,attribution:cfg.att}).addTo(map);
+    /* ไม่ขยายภาพเกินระดับที่ตั้งไว้ เพราะเกินจากนี้ได้แค่พิกเซลเดิมที่ถูกขยาย */
+    map.setMaxZoom(zoomCap());
+    tileLayer=L.tileLayer(cfg.url,{maxZoom:zoomCap(),maxNativeZoom:zoomCap(),attribution:cfg.att}).addTo(map);
     tileLayer.on('tileerror',function(){tileErr++;if(tileErr===4) toast('โหลดภาพดาวเทียมไม่ได้ ตรวจคีย์แผนที่และอินเทอร์เน็ต');});
-    tileKey=cfg.url;
+    tileKey=tk;
   }
-  try{if(L.Browser.mobile){if(tab==='survey') map.dragging.enable(); else map.dragging.disable();}}catch(e){}
-  map.invalidateSize();
+  attEl.innerHTML=cfg.att; /* โหมดหมุนซ่อนแถบที่มาของ Leaflet จึงแสดงที่มาของภาพเองตั้งตรงมุมขวาล่าง */
+  zb.textContent='ซูม '+map.getZoom();
+  calcRot();
+  layoutMap();
+  applyInteraction();
   var refit=(mapHole!==S.hole||mapTab!==tab);
   mapHole=S.hole;mapTab=tab;
   drawStatic(refit);
   lastPlayerKey='';
+  syncSimMarker();
   updateMapPlayer();
+}
+window.addEventListener('resize',function(){if(map&&mapWrap&&mapWrap.isConnected) layoutMap();});
+/* จุดน้ำเงินของโหมดทดสอบ ลากได้ในแท็บวัดระยะ ระหว่างลากจะอัปเดตตัวเลขระยะทันที */
+/* พิกัดบนแผนที่จากตำแหน่งนิ้ว/เมาส์ โดยถอดการหมุนของแผนที่ออกก่อน (ลากแบบปกติของ Leaflet ผิดทิศเมื่อแผนที่ถูกหมุน) */
+function pointerLatLng(cx,cy){
+  var r=mapEl.getBoundingClientRect(),dx=cx-(r.left+r.width/2),dy=cy-(r.top+r.height/2);
+  var a=-(rotAngle||0)*Math.PI/180,c=Math.cos(a),sn=Math.sin(a),sz=map.getSize();
+  return map.containerPointToLatLng(L.point(sz.x/2+dx*c-dy*sn,sz.y/2+dx*sn+dy*c));
+}
+function syncSimMarker(){
+  if(!map) return;
+  var want=!!(S.test&&S.sim&&tab==='play');
+  if(!want){if(simMk){map.removeLayer(simMk);simMk=null;simDrag=false;}return;}
+  if(!simMk){
+    simMk=L.marker([S.sim.lat,S.sim.lng],{icon:L.divIcon({className:'simpin',html:'<i></i>',iconSize:[32,32],iconAnchor:[16,16]}),draggable:false,keyboard:false,autoPan:false,zIndexOffset:1000}).addTo(map);
+    var el=simMk.getElement(),mk=simMk;
+    function stop(e){e.stopPropagation();}
+    el.addEventListener('mousedown',stop);el.addEventListener('touchstart',stop,{passive:true});
+    el.addEventListener('pointerdown',function(e){
+      if(e.button>0) return;
+      e.preventDefault();e.stopPropagation();
+      simDrag=true;try{el.setPointerCapture(e.pointerId);}catch(x){}
+      var ll=pointerLatLng(e.clientX,e.clientY);
+      simGrab={lat:S.sim.lat-ll.lat,lng:S.sim.lng-ll.lng}; /* จับตรงไหนของจุดก็ได้ จุดไม่กระโดด */
+    });
+    el.addEventListener('pointermove',function(e){
+      if(!simDrag||!simGrab) return;
+      var ll=pointerLatLng(e.clientX,e.clientY);
+      S.sim={lat:ll.lat+simGrab.lat,lng:ll.lng+simGrab.lng,acc:3};
+      mk.setLatLng([S.sim.lat,S.sim.lng]);updateLive();
+    });
+    function end(){if(!simDrag) return;simDrag=false;simGrab=null;save();updateLive();}
+    el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+  }else if(!simDrag){simMk.setLatLng([S.sim.lat,S.sim.lng]);}
 }
 function drawStatic(refit){
   if(!map||!gStatic) return;
@@ -1310,23 +1475,38 @@ function drawStatic(refit){
       L.marker([m.lat,m.lng],{icon:L.divIcon({className:'markicon',html:'<span>'+(i===0?'ที':i)+'</span>',iconSize:[24,24]}),interactive:false,keyboard:false}).addTo(gStatic);
     });
   }
-  if(refit) fitView(pts);
+  if(refit){if(rotAngle!==null) fitRot(); else fitView(pts);}
+}
+/* จัดกรอบในโหมดหมุน: วัดทุกจุด (ทีออฟ กรีน ช็อต ตัวคุณ) ในแกน 'ตามหลุม' กับ 'ขวางหลุม' แล้วเลือกซูมเต็มระดับที่ยังพอดีกรอบ */
+function fitRot(){
+  var g=holeGeo(S.hole),marks=S.round.marks[S.hole]||[],pos=getPos(),pts=[g.T,g.C].concat(marks);
+  if(pos&&dist(pos,g.T)<900) pts.push(pos);
+  var lat0=g.T.lat,lng0=g.T.lng,kn=mLat(lat0),ke=mLng(lat0),th=rotBearing;
+  var un=Math.cos(th),ue=Math.sin(th),vn=-Math.sin(th),ve=Math.cos(th);
+  var a0=1e9,a1=-1e9,c0=1e9,c1=-1e9;
+  pts.forEach(function(p){var n=(p.lat-lat0)*kn,e=(p.lng-lng0)*ke,a=n*un+e*ue,c=n*vn+e*ve;a0=Math.min(a0,a);a1=Math.max(a1,a);c0=Math.min(c0,c);c1=Math.max(c1,c);});
+  var W=mapWrap.clientWidth,H=mapWrap.clientHeight,pad=36;
+  var mpp=Math.max(Math.max(a1-a0,30)/Math.max(H-2*pad,50),Math.max(c1-c0,30)/Math.max(W-2*pad,50));
+  var z=Math.floor(Math.log(156543.03392*Math.cos(lat0*Math.PI/180)/mpp)/Math.LN2);
+  z=Math.max(12,Math.min(z,Math.min(19,zoomCap())));
+  var am=(a0+a1)/2,cm=(c0+c1)/2,n=am*un+cm*vn,e=am*ue+cm*ve;
+  map.setView([lat0+n/kn,lng0+e/ke],z,{animate:false});
 }
 function fitView(pts){
   var pos=getPos();
   if(tab==='play'&&pos&&pts.length&&dist(pos,{lat:pts[0][0],lng:pts[0][1]})<900) pts.push([pos.lat,pos.lng]);
-  if(pts.length>1){map.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:19,animate:false});return;}
-  if(pts.length===1){map.setView(pts[0],18,{animate:false});return;}
+  if(pts.length>1){map.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:Math.min(19,zoomCap()),animate:false});return;}
+  if(pts.length===1){map.setView(pts[0],Math.min(18,zoomCap()),{animate:false});return;}
   /* หลุมนี้ยังไม่มีหมุด: ไปที่หมุดของหลุมใกล้เคียง (หลุมก่อนหน้าก่อน) ไม่เช่นนั้นไปที่ตำแหน่งคุณ */
   for(var d=1;d<=9;d++){
     var cand=[((S.hole-d-1+18)%18)+1,((S.hole+d-1)%18)+1];
     for(var i=0;i<2;i++){
       var o=S.pts[cand[i]];
       var p=o&&(i===0?(o.C||o.T):(o.T||o.C));
-      if(p){map.setView([p.lat,p.lng],17,{animate:false});return;}
+      if(p){map.setView([p.lat,p.lng],Math.min(17,zoomCap()),{animate:false});return;}
     }
   }
-  if(pos) map.setView([pos.lat,pos.lng],18,{animate:false});
+  if(pos) map.setView([pos.lat,pos.lng],Math.min(18,zoomCap()),{animate:false});
 }
 function updateMapPlayer(){
   if(!map||!gPlayer||!mapEl||!mapEl.isConnected) return;
@@ -1339,10 +1519,9 @@ function updateMapPlayer(){
   if(!pos.sim&&pos.acc) L.circle([pos.lat,pos.lng],{radius:pos.acc,color:'#1f6fe0',weight:1,fillColor:'#1f6fe0',fillOpacity:0.15,interactive:false}).addTo(gPlayer);
   if(tab==='play'&&g.C){
     L.polyline([[pos.lat,pos.lng],[g.C.lat,g.C.lng]],{color:'#ffffff',weight:3,dashArray:'4 8',interactive:false}).addTo(gPlayer);
-    var q=L.circleMarker([pos.lat+(g.C.lat-pos.lat)*0.45,pos.lng+(g.C.lng-pos.lng)*0.45],{radius:1,opacity:0,fillOpacity:0,interactive:false}).addTo(gPlayer);
-    q.bindTooltip(String(fmt(yd(dist(pos,g.C)))),{permanent:true,direction:'right',offset:[10,0],className:'dist'});
+    L.marker([pos.lat+(g.C.lat-pos.lat)*0.45,pos.lng+(g.C.lng-pos.lng)*0.45],{icon:L.divIcon({className:'distlbl',html:'<span>'+fmt(yd(dist(pos,g.C)))+'</span>',iconSize:[0,0]}),interactive:false,keyboard:false}).addTo(gPlayer);
   }
-  L.circleMarker([pos.lat,pos.lng],{radius:9,color:'#ffffff',weight:3,fillColor:'#1f6fe0',fillOpacity:1,interactive:false}).addTo(gPlayer);
+  if(!simMk) L.circleMarker([pos.lat,pos.lng],{radius:9,color:'#ffffff',weight:3,fillColor:'#1f6fe0',fillOpacity:1,interactive:false}).addTo(gPlayer);
 }
 function placePin(h,k,ll,src,acc){
   var o=S.pts[h]||{};
@@ -1384,11 +1563,11 @@ function importJSON(txt){
 }
 var A={
   tab:function(t){tab=t.dataset.tab;confirmClear=false;render();window.scrollTo(0,0);},
-  prev:function(){S.hole=((S.hole+16)%18)+1;lastPin=null;pickTarget();save();render();},
-  next:function(){S.hole=(S.hole%18)+1;lastPin=null;pickTarget();save();render();},
-  hole:function(t){S.hole=+t.dataset.h;lastPin=null;pickTarget();save();render();if(tab==='survey') window.scrollTo(0,0);},
+  prev:function(){S.hole=((S.hole+16)%18)+1;lastPin=null;pickTarget();if(S.test) S.sim=defaultSim();save();render();},
+  next:function(){S.hole=(S.hole%18)+1;lastPin=null;pickTarget();if(S.test) S.sim=defaultSim();save();render();},
+  hole:function(t){S.hole=+t.dataset.h;lastPin=null;pickTarget();if(S.test) S.sim=defaultSim();save();render();if(tab==='survey') window.scrollTo(0,0);},
   gpsToggle:function(){
-    if(S.sim){S.sim=null;save();toast('ปิดตำแหน่งจำลองแล้ว');updateLive();}
+    if(S.test){setTest(false);toast('ปิดโหมดทดสอบแล้ว');}
     else if(watchId===null){startGPS();}
     else{stopGPS();}
   },
@@ -1424,7 +1603,7 @@ var A={
   pinMe:function(){
     var p=getPos();
     if(!p){
-      if(watchId===null&&!S.sim) startGPS();
+      if(watchId===null&&!S.test) startGPS();
       toast('ยังไม่มีตำแหน่ง รอสัญญาณ GPS สักครู่แล้วกดอีกครั้ง');return;
     }
     placePin(S.hole,surveyTarget,p,p.sim?'sim':'gps',Math.round(p.acc||0));
@@ -1435,13 +1614,16 @@ var A={
   mapMe:function(){
     var p=getPos();
     if(!map) return;
-    if(!p){if(watchId===null&&!S.sim) startGPS();toast('ยังไม่มีตำแหน่ง รอสัญญาณ GPS สักครู่แล้วกดอีกครั้ง');return;}
-    map.setView([p.lat,p.lng],19,{animate:false});
+    if(!p){if(watchId===null&&!S.test) startGPS();toast('ยังไม่มีตำแหน่ง รอสัญญาณ GPS สักครู่แล้วกดอีกครั้ง');return;}
+    map.setView([p.lat,p.lng],Math.min(19,zoomCap()),{animate:false});
   },
   mapFit:function(){if(map) drawStatic(true);},
+  mapZoomIn:function(){if(map) map.zoomIn(1);},
+  mapZoomOut:function(){if(map) map.zoomOut(1);},
+  rotToggle:function(){S.rot=(S.rot===false);save();mapHole=0;render();toast(S.rot?'หมุนแผนที่ตามหลุม: เปิด':'หมุนแผนที่ตามหลุม: ปิด (เหนืออยู่บน)');},
   geo:function(){
     var q=($('geoq').value||'').trim();if(!q||!map) return;
-    var key=S.map&&S.map.key;
+    var key=S.map&&S.map.keys&&S.map.keys.maptiler;
     if(!key){toast('ค้นหาใช้บริการของ MapTiler ต้องใส่คีย์ MapTiler ก่อน หรือเลื่อนแผนที่เอง');return;}
     fetch('https://api.maptiler.com/geocoding/'+encodeURIComponent(q)+'.json?limit=1&key='+encodeURIComponent(key))
       .then(function(r){if(!r.ok) throw new Error('bad');return r.json();})
@@ -1457,10 +1639,15 @@ var A={
     try{var n=importJSON($('imp').value);toast('นำเข้าแล้ว เพิ่ม '+n+' หมุด');render();}
     catch(e){toast(e.message);}
   },
+  testToggle:function(){
+    if(S.test){setTest(false);toast('ปิดโหมดทดสอบแล้ว');}
+    else{setTest(true);tab='play';toast('เปิดโหมดทดสอบแล้ว ลากจุดน้ำเงินบนแผนที่ได้เลย');render();setTimeout(function(){var t=$('tiles');if(t) t.scrollIntoView({block:'start'});},60);}
+  },
+  simReset:function(){S.sim=defaultSim();save();render();if(map&&S.sim) map.panTo([S.sim.lat,S.sim.lng],{animate:false});},
   setSim:function(){
     var p=parseLL($('simin').value);
     if(!p){toast('ใส่เป็น ละติจูด, ลองจิจูด เช่น 13.98765, 100.60123');return;}
-    stopGPS();S.sim={lat:p.lat,lng:p.lng,acc:3};save();toast('ใช้ตำแหน่งจำลองแล้ว ไปดูที่แท็บวัดระยะ');
+    S.sim={lat:p.lat,lng:p.lng,acc:3};save();toast('ย้ายตำแหน่งจำลองแล้ว ไปดูที่แท็บวัดระยะ');render();
   },
   newRound:function(){
     var has=false;for(var h in S.round.marks){if(S.round.marks[h].length) has=true;}
@@ -1471,15 +1658,14 @@ var A={
   cancelClear:function(){confirmClear=false;render();},
   doClear:function(){resetKeep();confirmClear=false;lastPin=null;surveyTarget='T';save();toast('ล้างข้อมูลแล้ว');render();},
   saveMap:function(){
-    var key=($('mapkey').value||'').trim(),url=($('mapurl').value||'').trim();
-    if(url){
-      if(!/^https:\/\//.test(url)||!/\{z\}/.test(url)||!/\{x\}/.test(url)||!/\{y\}/.test(url)){toast('URL ต้องขึ้นต้นด้วย https:// และมี {z} {x} {y}');return;}
-      S.map={kind:'custom',url:url,key:key};
-    }else if(key){S.map={kind:'maptiler',key:key,url:''};}
-    else{S.map=null;}
-    save();loadLeaflet();toast(S.map?'บันทึกการตั้งค่าแผนที่แล้ว':'ล้างการตั้งค่าแผนที่แล้ว');render();
+    var use=$('mapuse').value,kM=($('mapkey-maptiler').value||'').trim(),kE=($('mapkey-esri').value||'').trim(),url=($('mapurl').value||'').trim(),z=+$('mapzoom').value;
+    if(use==='maptiler'&&!kM){toast('ใส่คีย์ MapTiler ก่อน');return;}
+    if(use==='esri'&&!kE){toast('ใส่คีย์ Esri ก่อน');return;}
+    if(use==='custom'&&!validTileUrl(url)){toast('URL ต้องขึ้นต้นด้วย https:// และมี {z} {x} {y}');return;}
+    S.map={use:use,keys:{maptiler:kM,esri:kE},url:url,maxZoom:z};
+    save();loadLeaflet();toast('บันทึกการตั้งค่าแผนที่แล้ว');render();
   },
-  delMap:function(){S.map=null;save();toast('ลบคีย์แผนที่แล้ว');render();}
+  delMap:function(){S.map=null;save();toast('ลบการตั้งค่าแผนที่แล้ว');render();}
 };
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-act]');if(!t) return;
