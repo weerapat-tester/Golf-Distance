@@ -7,10 +7,10 @@
 <script>try{var __t=JSON.parse(localStorage.getItem("greenedge.v1")||"{}").theme;if(__t==="light"||__t==="dark")document.documentElement.setAttribute("data-theme",__t);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ระยะกรีน">
+<meta name="apple-mobile-web-app-title" content="Golf Distance">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="apple-touch-icon.png">
-<title>ระยะถึงกรีน</title>
+<title>Golf Distance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
@@ -684,6 +684,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --paper:#f1f4ea; --card:#ffffff; --ink:#12271d; --muted:#566a5d; --line:#d2dbc9;
   --accent:#1b7a49; --on-accent:#ffffff; --tint:#e2edd9;
   --good:#1b7a49; --warn:#9a5700; --bad:#b3261e;
+  --hero-a:#2fa468; --hero-b:#0d5a33; --hero-ink:#ffffff; --hero-sub:rgba(255,255,255,.8); --hero-num:#ffffff;
+  --stripe:rgba(27,122,73,.05); --glow:rgba(47,164,104,.20);
+  --shadow:0 2px 0 rgba(13,90,51,.10),0 12px 22px -16px rgba(13,90,51,.55);
   --font-body:'Noto Sans Thai',system-ui,-apple-system,'Segoe UI',Roboto,'Sukhumvit Set','Thonburi',sans-serif;
   --font-num:'Barlow Condensed','Arial Narrow','Noto Sans Thai',sans-serif;
   color-scheme:light;
@@ -693,6 +696,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --paper:#0d1913; --card:#14251c; --ink:#e7f0e3; --muted:#93a89b; --line:#264034;
     --accent:#4cd08a; --on-accent:#06150d; --tint:#1b3326;
     --good:#4cd08a; --warn:#f0a04b; --bad:#ff7b72;
+    --hero-a:#1f4a35; --hero-b:#10281b; --hero-ink:#e7f0e3; --hero-sub:#93a89b; --hero-num:#7ae8ad;
+    --stripe:rgba(76,208,138,.045); --glow:rgba(76,208,138,.10);
+    --shadow:0 2px 0 rgba(0,0,0,.30),0 12px 22px -16px rgba(0,0,0,.7);
     color-scheme:dark;
   }
 }
@@ -700,6 +706,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --paper:#0d1913; --card:#14251c; --ink:#e7f0e3; --muted:#93a89b; --line:#264034;
   --accent:#4cd08a; --on-accent:#06150d; --tint:#1b3326;
   --good:#4cd08a; --warn:#f0a04b; --bad:#ff7b72;
+  --hero-a:#1f4a35; --hero-b:#10281b; --hero-ink:#e7f0e3; --hero-sub:#93a89b; --hero-num:#7ae8ad;
+  --stripe:rgba(76,208,138,.045); --glow:rgba(76,208,138,.10);
+  --shadow:0 2px 0 rgba(0,0,0,.30),0 12px 22px -16px rgba(0,0,0,.7);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -839,16 +848,87 @@ a{color:var(--accent)}
 .card.test{border-color:var(--warn)}
 .markicon span{display:grid;place-items:center;width:24px;height:24px;font-weight:700;font-size:12px;border:2px solid #fff;color:#12271d;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.6)}
 @media (max-height:480px) and (orientation:landscape){.mapbox,.mapbox.tall{height:max(220px,70vh)}}
+
+/* ===== v8: Golf Distance — นุ่มและน่ารักขึ้น ใช้โทนสีเดิม ===== */
+body{background-color:var(--paper);background-image:radial-gradient(120% 55% at 50% -8%,var(--glow),transparent 62%),repeating-linear-gradient(90deg,var(--stripe) 0 38px,transparent 38px 76px)}
+header.hero{position:relative;display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-bottom:14px;padding:12px 10px 12px 18px;border-radius:26px;color:var(--hero-ink);overflow:hidden;
+  background:repeating-linear-gradient(100deg,rgba(255,255,255,.07) 0 26px,transparent 26px 52px),linear-gradient(135deg,var(--hero-a),var(--hero-b));box-shadow:var(--shadow)}
+.hero h1{font-family:var(--font-num);font-size:clamp(28px,9vw,38px);font-weight:700;letter-spacing:.03em;line-height:1.02;margin:0;color:var(--hero-ink)}
+.hero .crs{margin:2px 0 8px;font-size:13px;line-height:1.35;color:var(--hero-sub)}
+.hero .pill{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.32);color:var(--hero-ink)}
+.hero .pill::before,.hero .pill.good::before,.hero .pill.warn::before,.hero .pill.bad::before{background:#fff}
+.hero .pill.good::before{background:#7fe0a8;box-shadow:0 0 0 3px rgba(127,224,168,.3)}
+.hero .pill.warn::before{background:#ffd23f}
+.hero .pill.bad::before{background:#ff8a80}
+.hero-art{width:clamp(88px,27vw,112px)}
+.hero-art svg,.eart svg{display:block;width:100%;height:auto}
+@media (max-width:360px){.hero-art{width:78px}.hero h1{font-size:26px}header.hero{padding:10px 8px 10px 14px}}
+.mascot .bm{animation:bob 2.6s ease-in-out infinite}
+.mascot .fl{transform-box:fill-box;transform-origin:0 50%;animation:wave 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes wave{0%,100%{transform:skewY(0)}50%{transform:skewY(-7deg)}}
+@media (prefers-reduced-motion:reduce){.mascot .bm,.mascot .fl{animation:none}}
+.empty{text-align:center}
+.eart{width:128px;margin:0 auto 4px}
+.card{border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.card>h2{font-size:17px;font-weight:700}
+.btn{border-radius:14px;box-shadow:0 2px 0 var(--line);transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+.btn.primary{background:var(--accent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 86%,#fff),var(--accent));box-shadow:0 3px 0 rgba(0,0,0,.22)}
+.btn.primary:active:not(:disabled){box-shadow:none}
+.btn.danger{box-shadow:0 2px 0 var(--line)}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)}
+a.btn.primary{color:var(--on-accent)}
+.holebar .btn{border-radius:18px}
+.holeno b{color:var(--accent)}
+.chip{border-radius:15px;box-shadow:0 2px 0 var(--line)}
+.chip[aria-pressed="true"]{box-shadow:0 3px 0 rgba(0,0,0,.22)}
+.tile{position:relative;overflow:hidden;border:0;border-radius:26px;padding:14px 18px;color:var(--hero-ink);box-shadow:var(--shadow);
+  background:repeating-linear-gradient(100deg,rgba(255,255,255,.05) 0 26px,transparent 26px 52px),linear-gradient(135deg,var(--hero-a),var(--hero-b))}
+.tile::before{content:"";position:absolute;right:-40px;top:-40px;width:190px;height:190px;border-radius:50%;pointer-events:none;background:repeating-radial-gradient(circle,rgba(255,255,255,.11) 0 2px,transparent 2px 24px)}
+.tile::after{content:"";position:absolute;right:18px;top:14px;width:30px;height:36px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 40'%3E%3Crect x='6' y='2' width='3' height='36' rx='1.5' fill='white'/%3E%3Cpath d='M9 3L31 10.5L9 18Z' fill='%23ffd23f'/%3E%3C/svg%3E") no-repeat center/contain}
+.tile .lbl,.tile .unit{color:var(--hero-sub);font-weight:500}
+.tile .val{position:relative;color:var(--hero-num);text-shadow:0 3px 0 rgba(0,0,0,.14)}
+.meta{margin:2px 0 12px}
+.mapbox{border-radius:18px}
+nav{border-radius:22px 22px 0 0;box-shadow:0 -10px 22px -16px rgba(0,0,0,.5)}
+.rbtn{border-radius:14px;box-shadow:0 2px 0 var(--line)}
+.rbtn[aria-pressed="true"]{box-shadow:0 3px 0 rgba(0,0,0,.22)}
+.seg{border-radius:14px;box-shadow:0 2px 0 var(--line)}
+.sm{display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 3px;font-weight:700;border:2px solid transparent;border-radius:8px;line-height:1}
+.sm.par{color:var(--ink);font-weight:500}
+.sm.bird{border-radius:50%;border-color:var(--good);color:var(--good)}
+.sm.eagle{border-radius:50%;border-color:var(--good);color:var(--good);box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--good)}
+.sm.bog{border-color:var(--warn);color:var(--warn)}
+.sm.dbl{border-color:var(--bad);color:var(--bad);box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--bad)}
+td small{font-size:12px;color:var(--muted);margin-left:8px}
+tr.tot td{border-top:2px solid var(--accent);font-weight:700;background:var(--tint)}
+.totalbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 10px;padding:12px 18px;border-radius:22px;color:var(--hero-ink);
+  background:repeating-linear-gradient(100deg,rgba(255,255,255,.05) 0 26px,transparent 26px 52px),linear-gradient(135deg,var(--hero-a),var(--hero-b));box-shadow:var(--shadow)}
+.totalbar small{display:block;font-size:14px;color:var(--hero-sub)}
+.tb-n{font-family:var(--font-num);font-size:64px;line-height:1;font-weight:700;color:var(--hero-num)}
+.tb-v{font-family:var(--font-num);font-size:32px;font-weight:700;margin-left:8px;color:var(--hero-ink)}
+.tb-r{text-align:right;font-size:14px;line-height:1.5;color:var(--hero-sub)}
+.editbox{margin:10px 0;padding:4px 14px 12px;border-radius:18px;background:var(--tint)}
+.editbox .stepper{border-top-color:var(--line)}
+.editbox .stepper:first-child{border-top:0}
+.btn.block+.foot{margin-top:10px}
+.editbox .row{margin-top:6px}
+#imgov{position:fixed;z-index:2000;inset:0;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;background:rgba(5,15,10,.84);padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom))}
+#imgov .imgbox{width:100%;max-width:480px;background:var(--card);color:var(--ink);border-radius:22px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+#imgov img{display:block;width:100%;height:auto;border-radius:14px;margin-bottom:10px;-webkit-touch-callout:default;user-select:auto}
+#imgov .row .btn{flex:1 1 auto}
 </style>
 </head>
 <body>
 <div id="app">
-  <header>
-    <div>
-      <h1>ระยะถึงกรีน</h1>
-      <p class="course" id="course"></p>
+  <header class="hero">
+    <div class="hero-txt">
+      <h1>Golf Distance</h1>
+      <p class="crs" id="course"></p>
+      <span id="hdrpill" class="pill">GPS ปิด</span>
     </div>
-    <span id="hdrpill" class="pill">GPS ปิด</span>
+    <div class="hero-art" id="heroart" aria-hidden="true"></div>
   </header>
   <main id="view"></main>
 </div>
@@ -962,6 +1042,20 @@ function load(){
 var S=load()||blankState();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storageOk=true;}catch(e){storageOk=false;}}
 function resetKeep(){var m=S.map,th=S.theme,rt=S.rot;S=blankState();S.map=m;S.theme=th;S.rot=rt;}
+/* ลูกกอล์ฟยิ้มข้างธง (ตัวละครของเราเอง) ใช้ในหัวแอพ หน้าว่าง และรูปสกอร์ */
+function mascotSVG(){
+  var d='',pts=[[33,49],[44,45],[55,49],[27,60],[61,60],[31,73],[57,73],[44,80],[40,41],[50,41]];
+  pts.forEach(function(p){d+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="1.7"/>';});
+  return '<svg class="mascot" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ลูกกอล์ฟยิ้มข้างธง">'+
+    '<ellipse cx="60" cy="87" rx="55" ry="11" fill="#7fe0a8"/><ellipse cx="60" cy="87" rx="55" ry="11" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>'+
+    '<ellipse cx="93" cy="87" rx="8" ry="2.6" fill="#0b3d24"/><rect x="91.7" y="26" width="2.6" height="61" rx="1.3" fill="#fff"/>'+
+    '<path class="fl" d="M94.3 27 L115 34.5 L94.3 43 Z" fill="#ffd23f"/>'+
+    '<g class="bm"><ellipse cx="44" cy="88" rx="19" ry="3.6" fill="#06301c" opacity=".28"/>'+
+    '<circle cx="44" cy="62" r="25" fill="#fff" stroke="#cfe0d3" stroke-width="1.5"/><g fill="#d3e2d6">'+d+'</g>'+
+    '<circle cx="35.5" cy="60" r="3.3" fill="#12271d"/><circle cx="52.5" cy="60" r="3.3" fill="#12271d"/><circle cx="36.6" cy="58.8" r="1.1" fill="#fff"/><circle cx="53.6" cy="58.8" r="1.1" fill="#fff"/>'+
+    '<path d="M36.5 68 Q44 75 51.5 68" fill="none" stroke="#12271d" stroke-width="2.6" stroke-linecap="round"/>'+
+    '<ellipse cx="29.5" cy="67" rx="4.2" ry="2.6" fill="#ffb4a2" opacity=".75"/><ellipse cx="58.5" cy="67" rx="4.2" ry="2.6" fill="#ffb4a2" opacity=".75"/></g></svg>';
+}
 /* ธีมสี: auto = ตามเครื่อง (ไม่ตั้ง data-theme ให้ CSS ใช้ prefers-color-scheme) / light / dark สีเดิมทุกโหมด */
 function effTheme(){return (S.theme==='light'||S.theme==='dark')?S.theme:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');}
 function applyTheme(){
@@ -1086,7 +1180,7 @@ function viewPlay(){
   return holeBar()+
   '<div class="card"><div class="row spread"><div id="gpsinfo" aria-live="polite"></div><button id="gpsbtn" class="btn" data-act="gpsToggle"></button></div></div>'+
   '<div id="suggest"></div><div id="tiles"></div>'+mapCardHTML()+'<div id="testbox"></div><div id="plan"></div>'+
-  '<div class="card"><h2>ช็อตของหลุมนี้</h2><div id="shots">'+shotsHTML()+'</div></div>'+
+  '<div class="card"><h2>🏌️ ช็อตของหลุมนี้</h2><div id="shots">'+shotsHTML()+'</div></div>'+
   '<div class="card" id="finish">'+finishHTML()+'</div>';
 }
 /* ---- จบหลุม: กดปุ่ม +/− จดออนกับพัต แล้วค่อยบันทึก (สกอร์ = ออน + พัต) ---- */
@@ -1106,20 +1200,21 @@ function finState(){
   }
   return fin;
 }
-function stepRow(label,sub,f,val){
+function stepRow(label,sub,f,val,act,idp){
+  act=act||'finStep';idp=idp||'fin';
   return '<div class="stepper"><div><b>'+label+'</b><div class="muted">'+sub+'</div></div><div class="stepctl">'+
-    '<button class="btn step" data-act="finStep" data-f="'+f+'" data-d="-1" aria-label="ลด'+label+'">−</button><span class="stepn" id="fin-'+f+'" aria-live="polite">'+val+'</span>'+
-    '<button class="btn step" data-act="finStep" data-f="'+f+'" data-d="1" aria-label="เพิ่ม'+label+'">+</button></div></div>';
+    '<button class="btn step" data-act="'+act+'" data-f="'+f+'" data-d="-1" aria-label="ลด'+label+'">−</button><span class="stepn" id="'+idp+'-'+f+'" aria-live="polite">'+val+'</span>'+
+    '<button class="btn step" data-act="'+act+'" data-f="'+f+'" data-d="1" aria-label="เพิ่ม'+label+'">+</button></div></div>';
 }
 function finishHTML(){
   var f=finState(),par=PAR[S.hole-1],sc=f.on+f.putts,saved=S.round.holes[S.hole];
   if(saved&&!f.edit){
     var t=saved.on+saved.putts;
-    return '<h2>จบหลุม '+S.hole+' แล้ว ✓</h2><div class="finsum"><span class="big '+scCls(t,par)+'">'+t+'</span><span>'+scoreName(t,par)+' ('+vsTxt(t-par)+')</span></div>'+
+    return '<h2>⛳ จบหลุม '+S.hole+' แล้ว ✓</h2><div class="finsum"><span class="big '+scCls(t,par)+'">'+t+'</span><span>'+scoreName(t,par)+' ('+vsTxt(t-par)+')</span></div>'+
       '<p class="muted">ออน '+saved.on+' · พัต '+saved.putts+' · '+(saved.on<=par-2?'ขึ้นกรีนตามกติกา (GIR)':'ไม่ถึง GIR')+'</p>'+
       '<div class="row"><button class="btn" data-act="finEdit">แก้ไข</button><button class="btn primary" data-act="next">หลุมถัดไป ›</button></div>';
   }
-  return '<h2>จบหลุม '+S.hole+' <span class="muted" style="font-weight:400">พาร์ '+par+'</span></h2>'+
+  return '<h2>⛳ จบหลุม '+S.hole+' <span class="muted" style="font-weight:400">พาร์ '+par+'</span></h2>'+
     stepRow('ออน','ตีกี่ครั้งถึงขึ้นกรีน (รวมโทษ)','on',f.on)+stepRow('พัต','พัตกี่ครั้ง','putts',f.putts)+
     '<p class="finsum" id="fin-sum"><b>สกอร์ '+sc+'</b> · '+scoreName(sc,par)+' ('+vsTxt(sc-par)+')</p>'+
     '<button class="btn primary block" data-act="finSave">บันทึกจบหลุม</button>'+
@@ -1137,7 +1232,7 @@ function dogHTML(g,pos){
 }
 function tilesHTML(){
   var g=holeGeo(S.hole),pos=getPos();
-  if(!g.C) return '<div class="card"><h2>หลุมนี้ยังไม่ได้ปักกลางกรีน</h2><p class="muted">ไปที่แท็บ “ปักจุด” แล้วแตะบนภาพดาวเทียมเพื่อปักกลางกรีนและทีออฟ</p><button class="btn primary" data-act="tab" data-tab="survey">ปักจุดหลุม '+S.hole+'</button></div>';
+  if(!g.C) return '<div class="card empty"><div class="eart">'+mascotSVG()+'</div><h2>หลุมนี้ยังไม่ได้ปักกลางกรีน</h2><p class="muted">ไปที่แท็บ “ปักจุด” แล้วแตะบนภาพดาวเทียมเพื่อปักกลางกรีนและทีออฟ</p><button class="btn primary" data-act="tab" data-tab="survey">ปักจุดหลุม '+S.hole+'</button></div>';
   var v=pos?fmt(yd(dist(pos,g.C))):null;
   var meta='';
   if(g.T){
@@ -1280,19 +1375,33 @@ function overviewCard(){
 }
 function viewSurvey(){return holeBar()+surveyMapHTML()+pinsCard()+overviewCard();}
 
-/* --- แท็บประวัติ: ผลแต่ละหลุม สถิติรอบ และย้อนดูช็อต --- */
-var histRid=null,histHole=0;
+/* --- แท็บประวัติ: ผลแต่ละหลุม สกอร์รวม ย้อนดูช็อต แก้ผล และเซฟเป็นรูป --- */
+var histRid=null,histHole=0,hedit=null;
 function allRounds(){return [S.round].concat(S.rounds.slice().reverse());}
 function curHistRound(){var rs=allRounds();for(var i=0;i<rs.length;i++){if(rs[i].id===histRid) return rs[i];}return rs[0];}
 function roundStats(r){
-  var hs=r.holes||{},o={n:0,score:0,putts:0,vs:0,gir:0,p3:0,shots:0},h;
-  for(h=1;h<=18;h++){var x=hs[h];if(x){var par=PAR[h-1],sc=x.on+x.putts;o.n++;o.score+=sc;o.putts+=x.putts;o.vs+=sc-par;if(x.on<=par-2) o.gir++;if(x.putts>=3) o.p3++;}}
+  var hs=r.holes||{},o={n:0,par:0,on:0,score:0,putts:0,vs:0,gir:0,p3:0,shots:0},h;
+  for(h=1;h<=18;h++){var x=hs[h];if(x){var par=PAR[h-1],sc=x.on+x.putts;o.n++;o.par+=par;o.on+=x.on;o.score+=sc;o.putts+=x.putts;o.vs+=sc-par;if(x.on<=par-2) o.gir++;if(x.putts>=3) o.p3++;}}
   for(var m in (r.marks||{})) o.shots+=Math.max(0,r.marks[m].length-1);
   return o;
 }
+function halfStats(r,a,b){
+  var o={n:0,par:0,on:0,putts:0,score:0};
+  for(var h=a;h<=b;h++){var x=(r.holes||{})[h];if(x){o.n++;o.par+=PAR[h-1];o.on+=x.on;o.putts+=x.putts;o.score+=x.on+x.putts;}}
+  return o;
+}
 function fmtDate(d){try{var t=new Date(d+'T00:00:00');var x=t.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});return x&&x!=='Invalid Date'?x:d;}catch(e){return d;}}
+/* สัญลักษณ์สกอร์การ์ดแบบกอล์ฟ: วงกลม = ต่ำกว่าพาร์ (สองชั้น = อีเกิลขึ้นไป) สี่เหลี่ยม = เกินพาร์ (สองชั้น = ดับเบิลโบกี้ขึ้นไป) */
+function scKind(sc,par){var d=sc-par;return (sc===1||d<=-2)?'eagle':d===-1?'bird':d===0?'par':d===1?'bog':'dbl';}
+function scMarkHTML(sc,par){return '<span class="sm '+scKind(sc,par)+'">'+sc+'</span>';}
+function histEditHTML(r,h){
+  var e=hedit,par=PAR[h-1],sc=e.on+e.putts,has=!!(r.holes&&r.holes[h]);
+  return stepRow('ออน','ตีกี่ครั้งถึงขึ้นกรีน (รวมโทษ)','on',e.on,'hStep','hed')+stepRow('พัต','พัตกี่ครั้ง','putts',e.putts,'hStep','hed')+
+    '<p class="finsum" id="hed-sum"><b>สกอร์ '+sc+'</b> · '+scoreName(sc,par)+' ('+vsTxt(sc-par)+')</p>'+
+    '<div class="row"><button class="btn primary" data-act="hSave">บันทึก</button><button class="btn" data-act="hCancel">ยกเลิก</button>'+(has?'<button class="btn danger" data-act="hDel">ลบผลหลุมนี้</button>':'')+'</div>';
+}
 function histDetailHTML(r,h){
-  var x=(r.holes||{})[h],par=PAR[h-1],g=holeGeo(h),marks=(r.marks&&r.marks[h])||[],res,flags=[];
+  var x=(r.holes||{})[h],par=PAR[h-1],g=holeGeo(h),marks=(r.marks&&r.marks[h])||[],res,flags=[],editing=!!(hedit&&hedit.rid===r.id&&hedit.h===h);
   if(x){
     var sc=x.on+x.putts;
     res='<p><b class="'+scCls(sc,par)+'" style="font-size:24px">'+sc+'</b> '+scoreName(sc,par)+' ('+vsTxt(sc-par)+') · ออน '+x.on+' · พัต '+x.putts+' · '+(x.on<=par-2?'GIR ✓':'GIR ✗')+'</p>';
@@ -1300,6 +1409,7 @@ function histDetailHTML(r,h){
     if(x.on>par-2) flags.push('ขึ้นกรีนช้ากว่ากติกา (ออน '+x.on+' พาร์ '+par+')');
     if(sc-par>=2) flags.push('เกินพาร์ '+(sc-par)+' ช็อต');
   }else res='<p class="muted">ยังไม่ได้บันทึกผลหลุมนี้</p>';
+  var ed=editing?'<div id="hedit" class="editbox">'+histEditHTML(r,h)+'</div>':'<div id="hedit"><button class="btn small" data-act="hEdit">'+(x?'✏️ แก้ผลหลุมนี้':'➕ เพิ่มผลหลุมนี้')+'</button></div>';
   var rows=marks.map(function(m,i){
     var rem=g.C?' · เหลือถึงกลางกรีน '+fmt(yd(dist(m,g.C)))+' หลา':'';
     if(i===0) return '<li><b>ทีออฟ</b>'+rem+'</li>';
@@ -1307,7 +1417,7 @@ function histDetailHTML(r,h){
     return '<li><b>ช็อต '+i+'</b>'+(club?' · '+esc(club):'')+' · ไป '+fmt(yd(dist(marks[i-1],m)))+' หลา'+rem+'</li>';
   }).join('');
   var svg=(g.C&&marks.length)?'<div class="plan">'+planSVG(h,marks,null,{num:true}).svg+'<div class="muted cap">หัวขึ้นคือทิศไปกรีน · เลขคือที่ที่ลูกอยู่หลังช็อตนั้น</div></div>':'';
-  return '<div class="card" id="histdetail"><h2>หลุม '+h+' <span class="muted" style="font-weight:400">พาร์ '+par+' · การ์ด '+CARD[h-1]+' หลา</span></h2>'+res+
+  return '<div class="card" id="histdetail"><h2>หลุม '+h+' <span class="muted" style="font-weight:400">พาร์ '+par+' · การ์ด '+CARD[h-1]+' หลา</span></h2>'+res+ed+
     (flags.length?'<ul class="clean">'+flags.map(function(t){return '<li class="wn">⚠ '+esc(t)+'</li>';}).join('')+'</ul>':'')+svg+
     (rows?'<h3 style="margin:12px 0 6px">ช็อตที่บันทึกพิกัดไว้</h3><ul class="clean">'+rows+'</ul>':'<p class="muted">หลุมนี้ไม่ได้บันทึกพิกัดช็อต</p>')+'</div>';
 }
@@ -1318,14 +1428,117 @@ function viewHist(){
   var rows='';
   for(var h=1;h<=18;h++){
     var x=(r.holes||{})[h],par=PAR[h-1],ms=(r.marks&&r.marks[h])?Math.max(0,r.marks[h].length-1):0,sc=x?x.on+x.putts:null;
-    rows+='<tr data-act="hh" data-h="'+h+'"'+(h===histHole?' class="cur"':'')+'><td>'+h+'</td><td>'+par+'</td>'+(x?'<td>'+x.on+'</td><td class="'+(x.putts>=3?'wn':'')+'">'+x.putts+'</td><td class="'+scCls(sc,par)+'">'+sc+' <small>('+vsTxt(sc-par)+')</small></td>':'<td class="no">–</td><td class="no">–</td><td class="no">–</td>')+'<td class="no">'+(ms||'')+'</td></tr>';
+    rows+='<tr data-act="hh" data-h="'+h+'"'+(h===histHole?' class="cur"':'')+'><td>'+h+'</td><td>'+par+'</td>'+(x?'<td>'+x.on+'</td><td class="'+(x.putts>=3?'wn':'')+'">'+x.putts+'</td><td>'+scMarkHTML(sc,par)+'<small>'+vsTxt(sc-par)+'</small></td>':'<td class="no">–</td><td class="no">–</td><td class="no">–</td>')+'<td class="no">'+(ms||'')+'</td></tr>';
   }
-  var sum=st.n?'<p>จบแล้ว <b>'+st.n+'</b>/18 หลุม · สกอร์รวม <b>'+st.score+'</b> ('+vsTxt(st.vs)+' จากพาร์ของหลุมที่จบ)</p><p>พัตรวม '+st.putts+' (เฉลี่ย '+(st.putts/st.n).toFixed(1)+' ต่อหลุม) · GIR '+st.gir+'/'+st.n+' · 3 พัตขึ้นไป '+st.p3+' หลุม</p>':'<p class="muted">รอบนี้ยังไม่ได้บันทึกผลหลุมไหนเลย กดปุ่ม “จบหลุมนี้” ในแท็บวัดระยะ</p>';
-  return '<div class="card"><h2>ประวัติรอบ</h2><div class="rlist">'+list+'</div></div>'+
-    '<div class="card"><h2>สรุปรอบ '+esc(fmtDate(r.date))+'</h2>'+sum+'<div class="scroll"><table><thead><tr><th>หลุม</th><th>พาร์</th><th>ออน</th><th>พัต</th><th>สกอร์</th><th>ช็อต</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-    '<p class="foot">แตะแถวเพื่อดูช็อตของหลุมนั้น · “ช็อต” คือจำนวนช็อตที่บันทึกพิกัดไว้ในแท็บวัดระยะ</p></div>'+
+  var foot=st.n?'<tfoot><tr class="tot"><td>รวม</td><td>'+st.par+'</td><td>'+st.on+'</td><td>'+st.putts+'</td><td>'+st.score+' <small>'+vsTxt(st.vs)+'</small></td><td></td></tr></tfoot>':'';
+  var head=st.n?'<p>จบแล้ว <b>'+st.n+'</b>/18 หลุม · พัตรวม '+st.putts+' (เฉลี่ย '+(st.putts/st.n).toFixed(1)+' ต่อหลุม)</p><p>GIR '+st.gir+'/'+st.n+' · 3 พัตขึ้นไป '+st.p3+' หลุม</p>'
+    :'<div class="empty"><div class="eart">'+mascotSVG()+'</div><p class="muted">รอบนี้ยังไม่ได้บันทึกผลหลุมไหนเลย กดปุ่ม “บันทึกจบหลุม” ในแท็บวัดระยะ หรือแตะแถวหลุมด้านล่างเพื่อกรอกเอง</p></div>';
+  var total=st.n?'<div class="totalbar" id="totalbar"><div><small>สกอร์รวม</small><div><span class="tb-n">'+st.score+'</span><span class="tb-v">('+vsTxt(st.vs)+')</span></div></div>'+
+    '<div class="tb-r">พาร์ '+st.par+'<br>'+(st.n<18?'จาก '+st.n+' หลุมที่จบแล้ว':'ครบ 18 หลุม')+'</div></div>':'';
+  return '<div class="card"><h2>🗓️ ประวัติรอบ</h2><div class="rlist">'+list+'</div></div>'+
+    '<div class="card"><h2>📋 สรุปรอบ '+esc(fmtDate(r.date))+'</h2>'+head+'<div class="scroll"><table><thead><tr><th>หลุม</th><th>พาร์</th><th>ออน</th><th>พัต</th><th>สกอร์</th><th>ช็อต</th></tr></thead><tbody>'+rows+'</tbody>'+foot+'</table></div>'+total+
+    '<button class="btn primary block" data-act="saveImg"'+(st.n?'':' disabled')+'>📷 บันทึกสกอร์เป็นรูปภาพ</button>'+
+    '<p class="foot">แตะแถวหลุมเพื่อดูช็อตและแก้ผลของหลุมนั้นได้ทุกรอบ · “ช็อต” คือจำนวนช็อตที่บันทึกพิกัดไว้ในแท็บวัดระยะ</p></div>'+
     (histHole>=1&&histHole<=18?histDetailHTML(r,histHole):'');
 }
+
+/* ---- เซฟสกอร์การ์ดเป็นรูป: วาดบน canvas เอง (ไม่ใช้ไลบรารี) แล้วแชร์/ดาวน์โหลด ---- */
+var imgUrl=null,imgFile=null;
+function loadSvgImg(svg){return new Promise(function(res){var i=new Image();i.onload=function(){res(i);};i.onerror=function(){res(null);};i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
+function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function makeScoreImage(r){
+  var FB='"Noto Sans Thai","Thonburi","Sukhumvit Set",system-ui,sans-serif',FN='"Barlow Condensed","Arial Narrow",'+FB;
+  var fl=[];
+  try{if(document.fonts&&document.fonts.load){fl=[document.fonts.load('700 40px "Noto Sans Thai"','ก1'),document.fonts.load('500 30px "Noto Sans Thai"','ก1'),document.fonts.load('400 30px "Noto Sans Thai"','ก1'),document.fonts.load('700 40px "Barlow Condensed"','19')];}}catch(e){}
+  return Promise.all(fl.map(function(p){return p.catch(function(){});})).then(function(){return loadSvgImg(mascotSVG());}).then(function(mi){
+    var W=1080,H=1560,cv=document.createElement('canvas');cv.width=W;cv.height=H;
+    var c=cv.getContext('2d'),st=roundStats(r);
+    var GOOD='#1b7a49',WARN='#9a5700',BAD='#b3261e',INK='#12271d',MUT='#566a5d',LINE='#d2dbc9',TINT='#e2edd9';
+    c.textBaseline='alphabetic';
+    c.fillStyle='#f1f4ea';c.fillRect(0,0,W,H);
+    /* หัวการ์ด */
+    var g=c.createLinearGradient(0,0,W,300);g.addColorStop(0,'#2fa468');g.addColorStop(1,'#0d5a33');
+    c.fillStyle=g;c.fillRect(0,0,W,300);
+    c.save();c.beginPath();c.rect(0,0,W,300);c.clip();c.strokeStyle='rgba(255,255,255,.07)';c.lineWidth=26;
+    for(var i=-300;i<W+300;i+=52){c.beginPath();c.moveTo(i,0);c.lineTo(i+90,300);c.stroke();}
+    c.restore();
+    c.textAlign='left';c.fillStyle='#fff';c.font='700 96px '+FN;c.fillText('Golf Distance',56,142);
+    c.fillStyle='rgba(255,255,255,.9)';c.font='500 34px '+FB;c.fillText(S.course,60,198);
+    c.font='400 32px '+FB;c.fillText(fmtDate(r.date)+' · พาร์ 70',60,246);
+    if(mi) c.drawImage(mi,790,38,252,210);
+    /* สรุปสกอร์ */
+    c.fillStyle='#fff';rrect(c,40,330,1000,236,32);c.fill();c.strokeStyle=LINE;c.lineWidth=2;c.stroke();
+    c.fillStyle=MUT;c.font='500 30px '+FB;c.fillText('สกอร์รวม',80,392);
+    c.fillStyle=INK;c.font='700 156px '+FN;c.fillText(String(st.score),76,528);
+    var w=c.measureText(String(st.score)).width;
+    c.fillStyle=st.vs<0?GOOD:st.vs===0?INK:WARN;c.font='700 66px '+FN;c.fillText('('+vsTxt(st.vs)+')',76+w+22,528);
+    c.fillStyle=INK;c.font='500 32px '+FB;
+    c.fillText('พาร์ '+st.par+' · จบ '+st.n+'/18 หลุม',600,418);
+    c.fillText('พัตรวม '+st.putts+' (เฉลี่ย '+(st.n?(st.putts/st.n).toFixed(1):'0')+')',600,474);
+    c.fillText('GIR '+st.gir+'/'+st.n+' · 3 พัตขึ้นไป '+st.p3+' หลุม',600,530);
+    /* ตาราง 2 ฝั่ง: OUT 1-9 / IN 10-18 */
+    function mark(cx,cy,k,col){
+      c.strokeStyle=col;c.lineWidth=4;
+      if(k==='bird'||k==='eagle'){c.beginPath();c.arc(cx,cy,k==='eagle'?21:25,0,6.2832);c.stroke();if(k==='eagle'){c.beginPath();c.arc(cx,cy,29,0,6.2832);c.stroke();}}
+      else if(k==='bog'||k==='dbl'){var q=k==='dbl'?19:24;rrect(c,cx-q,cy-q,q*2,q*2,7);c.stroke();if(k==='dbl'){rrect(c,cx-27,cy-27,54,54,9);c.stroke();}}
+    }
+    function half(x0,a,b,label){
+      var y=606,cx=[x0+46,x0+136,x0+226,x0+316,x0+414],h;
+      c.fillStyle=GOOD;rrect(c,x0,y,480,52,26);c.fill();
+      c.textAlign='center';c.fillStyle='#fff';c.font='700 30px '+FB;c.fillText(label,x0+240,y+37);
+      y+=66;c.fillStyle=MUT;c.font='500 24px '+FB;
+      ['หลุม','พาร์','ออน','พัต','สกอร์'].forEach(function(t,i){c.fillText(t,cx[i],y+28);});
+      y+=44;
+      for(h=a;h<=b;h++){
+        var x=(r.holes||{})[h],par=PAR[h-1],cy=y+32;
+        c.fillStyle=((h-a)%2===0)?'#ffffff':'#f6f9f0';c.fillRect(x0,y,480,64);
+        c.strokeStyle=LINE;c.lineWidth=1.5;c.beginPath();c.moveTo(x0,y+64);c.lineTo(x0+480,y+64);c.stroke();
+        c.fillStyle=INK;c.font='700 38px '+FN;c.fillText(String(h),cx[0],cy+13);
+        c.fillStyle=MUT;c.font='600 36px '+FN;c.fillText(String(par),cx[1],cy+13);
+        if(x){
+          var sc=x.on+x.putts,k=scKind(sc,par),col=(k==='bird'||k==='eagle')?GOOD:k==='bog'?WARN:k==='dbl'?BAD:INK;
+          c.fillStyle=INK;c.font='600 36px '+FN;c.fillText(String(x.on),cx[2],cy+13);
+          c.fillStyle=x.putts>=3?WARN:INK;c.fillText(String(x.putts),cx[3],cy+13);
+          mark(cx[4],cy,k,col);c.fillStyle=col;c.font='700 40px '+FN;c.fillText(String(sc),cx[4],cy+14);
+        }else{c.fillStyle='#9aab9f';c.font='600 34px '+FN;[2,3,4].forEach(function(i){c.fillText('–',cx[i],cy+12);});}
+        y+=64;
+      }
+      var hs=halfStats(r,a,b);
+      c.fillStyle=TINT;rrect(c,x0,y+4,480,64,16);c.fill();
+      c.fillStyle=INK;c.font='700 34px '+FN;c.fillText(a===1?'OUT':'IN',cx[0],y+48);
+      c.font='700 36px '+FN;
+      c.fillText(hs.n?String(hs.par):'–',cx[1],y+48);c.fillText(hs.n?String(hs.on):'–',cx[2],y+48);c.fillText(hs.n?String(hs.putts):'–',cx[3],y+48);c.fillText(hs.n?String(hs.score):'–',cx[4],y+48);
+    }
+    half(40,1,9,'OUT · หลุม 1–9');half(560,10,18,'IN · หลุม 10–18');
+    /* แถบรวมล่างสุด */
+    var by=1380,bg=c.createLinearGradient(40,by,1040,by+100);bg.addColorStop(0,'#2fa468');bg.addColorStop(1,'#0d5a33');
+    c.fillStyle=bg;rrect(c,40,by,1000,104,30);c.fill();
+    c.textAlign='left';c.fillStyle='#fff';c.font='700 42px '+FB;c.fillText('รวม',80,by+66);
+    c.font='500 32px '+FB;c.fillStyle='rgba(255,255,255,.92)';
+    c.fillText('พาร์ '+st.par+'  ·  พัต '+st.putts,200,by+64);
+    c.textAlign='right';c.fillStyle='#fff';c.font='700 66px '+FN;c.fillText(st.score+' ('+vsTxt(st.vs)+')',1000,by+76);
+    c.textAlign='center';c.fillStyle=MUT;c.font='400 26px '+FB;c.fillText('Golf Distance · '+S.course,W/2,1520);
+    return new Promise(function(res){cv.toBlob(function(b){res(b);},'image/png');});
+  });
+}
+function closeImg(){
+  var d=document.getElementById('imgov');if(d&&d.parentNode) d.parentNode.removeChild(d);
+  if(imgUrl){try{URL.revokeObjectURL(imgUrl);}catch(e){}imgUrl=null;}
+  imgFile=null;document.body.style.overflow='';
+}
+function showImgOverlay(blob,r){
+  closeImg();
+  imgUrl=URL.createObjectURL(blob);
+  var name='golf-distance-'+(r.date||'score')+'.png';
+  try{imgFile=new File([blob],name,{type:'image/png'});}catch(e){imgFile=null;}
+  var can=!!(imgFile&&navigator.canShare&&navigator.share&&navigator.canShare({files:[imgFile]}));
+  var d=document.createElement('div');d.id='imgov';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','รูปสกอร์การ์ด');
+  d.innerHTML='<div class="imgbox"><img id="imgprev" src="'+imgUrl+'" alt="รูปสกอร์การ์ด"><p class="muted">iPhone: กดปุ่ม “บันทึก / แชร์” แล้วเลือก “บันทึกรูปภาพ” หรือกดค้างที่รูปแล้วเลือก “เพิ่มไปยังรูปภาพ”</p>'+
+    '<div class="row">'+(can?'<button class="btn primary" data-act="shareImg">บันทึก / แชร์</button>':'')+'<a class="btn'+(can?'':' primary')+'" id="imgdl" href="'+imgUrl+'" download="'+name+'">ดาวน์โหลดรูป</a><button class="btn" data-act="closeImg" id="imgclose">ปิด</button></div></div>';
+  document.body.appendChild(d);document.body.style.overflow='hidden';
+  var cb=document.getElementById('imgclose');if(cb) cb.focus();
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('imgov')) closeImg();});
 
 /* --- แท็บข้อมูล --- */
 function issues(){
@@ -1362,7 +1575,7 @@ function exportJSON(){
 }
 function themeCardHTML(){
   var opts=[['auto','ตามเครื่อง'],['light','สว่าง'],['dark','มืด']];
-  return '<div class="card"><h2>ธีมสี</h2><div class="segs" role="group" aria-label="ธีมสี">'+opts.map(function(o){return '<button class="seg" data-act="themeSet" data-v="'+o[0]+'" aria-pressed="'+(S.theme===o[0])+'">'+o[1]+'</button>';}).join('')+'</div><p class="foot">ตามเครื่อง = สลับสว่าง/มืดตามการตั้งค่าของมือถือ</p></div>';
+  return '<div class="card"><h2>🎨 ธีมสี</h2><div class="segs" role="group" aria-label="ธีมสี">'+opts.map(function(o){return '<button class="seg" data-act="themeSet" data-v="'+o[0]+'" aria-pressed="'+(S.theme===o[0])+'">'+o[1]+'</button>';}).join('')+'</div><p class="foot">ตามเครื่อง = สลับสว่าง/มืดตามการตั้งค่าของมือถือ</p></div>';
 }
 function viewData(){
   var is=issues(),cs=clubStats();
@@ -1822,8 +2035,46 @@ var A={
   finEdit:function(){var f=finState();f.edit=true;finRefresh();},
   finCancel:function(){fin=null;finRefresh();},
   finDel:function(){delete S.round.holes[S.hole];fin=null;save();toast('ลบผลหลุม '+S.hole+' แล้ว');finRefresh();},
-  hr:function(t){histRid=+t.dataset.id;histHole=0;render();},
-  hh:function(t){histHole=+t.dataset.h;render();setTimeout(function(){var d=$('histdetail');if(d) d.scrollIntoView({block:'start'});},40);},
+  hr:function(t){histRid=+t.dataset.id;histHole=0;hedit=null;render();},
+  hh:function(t){histHole=+t.dataset.h;hedit=null;render();setTimeout(function(){var d=$('histdetail');if(d) d.scrollIntoView({block:'start'});},40);},
+  hEdit:function(){
+    var r=curHistRound(),h=histHole,x=(r.holes||{})[h];
+    hedit={rid:r.id,h:h,on:x?x.on:Math.max(1,PAR[h-1]-2),putts:x?x.putts:2};
+    render();setTimeout(function(){var d=$('histdetail');if(d) d.scrollIntoView({block:'start'});},40);
+  },
+  hStep:function(t){
+    if(!hedit) return;
+    var k=t.dataset.f,d=+t.dataset.d,max=k==='on'?ON_MAX:PUTT_MAX,min=k==='on'?1:0;
+    hedit[k]=Math.max(min,Math.min(max,hedit[k]+d));
+    var el=$('hedit'),r=curHistRound();if(el) el.innerHTML=histEditHTML(r,hedit.h);
+  },
+  hSave:function(){
+    var r=curHistRound();if(!hedit||hedit.rid!==r.id) return;
+    if(!r.holes) r.holes={};
+    r.holes[hedit.h]={on:hedit.on,putts:hedit.putts,ts:Date.now()};
+    var t=hedit.on+hedit.putts,h=hedit.h;
+    if(r===S.round) fin=null;
+    hedit=null;save();toast('แก้ผลหลุม '+h+' แล้ว: ออน '+r.holes[h].on+' พัต '+r.holes[h].putts+' = '+t+' ('+scoreName(t,PAR[h-1])+')');
+    render();setTimeout(function(){var d=$('histdetail');if(d) d.scrollIntoView({block:'start'});},40);
+  },
+  hCancel:function(){hedit=null;render();setTimeout(function(){var d=$('histdetail');if(d) d.scrollIntoView({block:'start'});},40);},
+  hDel:function(){
+    var r=curHistRound();if(!hedit||hedit.rid!==r.id) return;
+    var h=hedit.h;if(r.holes) delete r.holes[h];
+    if(r===S.round) fin=null;
+    hedit=null;save();toast('ลบผลหลุม '+h+' แล้ว');render();
+  },
+  saveImg:function(){
+    var r=curHistRound(),st=roundStats(r);
+    if(!st.n){toast('ยังไม่มีผลหลุมให้บันทึก');return;}
+    toast('กำลังสร้างรูป…');
+    makeScoreImage(r).then(function(b){if(!b) throw new Error('blob');showImgOverlay(b,r);}).catch(function(){toast('สร้างรูปไม่สำเร็จ ลองอีกครั้ง');});
+  },
+  shareImg:function(){
+    if(!imgFile||!navigator.share) return;
+    navigator.share({files:[imgFile],title:'Golf Distance'}).catch(function(){});
+  },
+  closeImg:function(){closeImg();},
   themeSet:function(t){S.theme=t.dataset.v;save();applyTheme();render();},
   newRound:function(){
     var has=Object.keys(S.round.holes||{}).length>0;for(var h in S.round.marks){if(S.round.marks[h].length) has=true;}
@@ -1857,7 +2108,7 @@ document.addEventListener('change',function(e){
 });
 
 window.__greenedge={dist:dist,eff:eff,parseLL:parseLL,yd:yd,median:median,state:function(){return S;},map:function(){return map;},mapAvailable:mapAvailable,card:CARD};
-applyTheme();pickTarget();save();render();loadLeaflet();
+applyTheme();$('heroart').innerHTML=mascotSVG();pickTarget();save();render();loadLeaflet();
 })();
 </script>
 </body>
